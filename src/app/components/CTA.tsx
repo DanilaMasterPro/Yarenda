@@ -1,4 +1,4 @@
-import { Button } from "./ui/button";
+import { AppButton } from "./ui/AppButton";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 export function CTA() {
@@ -13,16 +13,20 @@ export function CTA() {
                 Начните зарабатывать на своих вещах
               </h2>
               <p className="text-lg text-dark-400 mb-8">
-                Превратите редко используемые вещи в источник дохода. 
-                Размещение объявления занимает всего 5 минут.
+                Превратите редко используемые вещи в источник дохода. Размещение
+                объявления занимает всего 5 минут.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-dark-500 text-white hover:bg-dark-600">
+                <AppButton
+                  variant="primary"
+                  size="lg"
+                  className="bg-gray-900 text-white hover:bg-gray-800"
+                >
                   Разместить объявление
-                </Button>
-                <Button size="lg" variant="outline" className="border-2 border-dark-500 text-dark-500 bg-transparent hover:bg-dark-500 hover:text-white">
+                </AppButton>
+                <AppButton variant="secondary" size="lg">
                   Узнать больше
-                </Button>
+                </AppButton>
               </div>
 
               {/* Stats */}

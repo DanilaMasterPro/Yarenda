@@ -1,3 +1,5 @@
+import { AppButton } from "./ui/AppButton";
+
 const footerLinks = {
   company: {
     title: "Компания",
@@ -43,9 +45,7 @@ export function Footer() {
 
           {/* Support Button */}
           <div className="col-span-2 md:col-span-2 lg:col-span-2 flex md:justify-end items-start">
-            <button className="bg-yellow-500 hover:bg-yellow-600 text-dark-500 px-6 py-2.5 rounded-lg font-medium transition-colors">
-              Поддержка
-            </button>
+            <AppButton variant="primary">Поддержка</AppButton>
           </div>
         </div>
 

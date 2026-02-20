@@ -1,3 +1,5 @@
+"use client";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -62,9 +64,7 @@ export function PhoneVerificationModal({
             className={`h-12 mb-2 ${error ? "border-red-500" : ""}`}
           />
 
-          {error && (
-            <p className="text-sm text-red-500 mb-4">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
 
           <div className="space-y-3 mt-6">
             <Button

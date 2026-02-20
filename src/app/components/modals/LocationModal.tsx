@@ -1,3 +1,5 @@
+"use client";
+
 import { X, MapPin } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -59,16 +61,20 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
           <div className="mt-6">
             <p className="text-sm text-gray-600 mb-3">Популярные города:</p>
             <div className="flex flex-wrap gap-2">
-              {["Москва", "Санкт-Петербург", "Казань", "Екатеринбург", "Новосибирск"].map(
-                (city) => (
-                  <button
-                    key={city}
-                    className="px-4 py-2 bg-gray-100 rounded-full text-sm hover:bg-teal-50 hover:text-teal-600 transition-colors"
-                  >
-                    {city}
-                  </button>
-                )
-              )}
+              {[
+                "Москва",
+                "Санкт-Петербург",
+                "Казань",
+                "Екатеринбург",
+                "Новосибирск",
+              ].map((city) => (
+                <button
+                  key={city}
+                  className="px-4 py-2 bg-gray-100 rounded-full text-sm hover:bg-teal-50 hover:text-teal-600 transition-colors"
+                >
+                  {city}
+                </button>
+              ))}
             </div>
           </div>
         </div>

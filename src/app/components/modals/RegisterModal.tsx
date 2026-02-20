@@ -1,3 +1,5 @@
+"use client";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -13,7 +15,11 @@ interface RegisterModalProps {
   onBack: () => void;
 }
 
-export function RegisterModal({ open, onOpenChange, onBack }: RegisterModalProps) {
+export function RegisterModal({
+  open,
+  onOpenChange,
+  onBack,
+}: RegisterModalProps) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -92,12 +98,7 @@ export function RegisterModal({ open, onOpenChange, onBack }: RegisterModalProps
             </Label>
             <div className="flex gap-2 mt-2">
               <div className="w-24">
-                <Input
-                  type="text"
-                  value="+7"
-                  readOnly
-                  className="h-12"
-                />
+                <Input type="text" value="+7" readOnly className="h-12" />
               </div>
               <Input
                 id="phone"
@@ -113,8 +114,8 @@ export function RegisterModal({ open, onOpenChange, onBack }: RegisterModalProps
           {/* Info Box */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-900">
-              Аккаунты Яренда являются личными. Пожалуйста, введите ваше настоящее имя, 
-              как указано в паспорте
+              Аккаунты Яренда являются личными. Пожалуйста, введите ваше
+              настоящее имя, как указано в паспорте
             </p>
             <button className="text-sm text-blue-600 hover:underline mt-1">
               Читать далее

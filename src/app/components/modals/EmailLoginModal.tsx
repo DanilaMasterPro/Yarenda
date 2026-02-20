@@ -1,3 +1,5 @@
+"use client";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -57,11 +59,7 @@ export function EmailLoginModal({
             <div className="h-px bg-gray-300 flex-1" />
           </div>
 
-          <Button
-            variant="ghost"
-            className="w-full mt-4"
-            onClick={onBack}
-          >
+          <Button variant="ghost" className="w-full mt-4" onClick={onBack}>
             Назад
           </Button>
         </div>

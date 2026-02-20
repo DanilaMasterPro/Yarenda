@@ -1,4 +1,6 @@
-import { Link } from "react-router";
+"use client";
+
+import Link from "next/link";
 import { Heart, Star, MapPin } from "lucide-react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback } from "./ui/avatar";
@@ -31,7 +33,7 @@ export function ProductCard({
 }: ProductCardProps) {
   return (
     <Link
-      to={`/listings/${id}`}
+      href={`/listings/${id}`}
       className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
     >
       {/* Image */}

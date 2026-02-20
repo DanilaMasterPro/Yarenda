@@ -1,7 +1,9 @@
+"use client";
+
 import { useState } from "react";
-import { Link } from "react-router";
+import Link from "next/link";
 import { ChevronDown, ChevronRight, SlidersHorizontal } from "lucide-react";
-import { Button } from "../components/ui/button";
+import { AppButton } from "../components/ui/AppButton";
 import { Checkbox } from "../components/ui/checkbox";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -37,7 +39,8 @@ const products = [
     reviews: 89,
     owner: "Александр М.",
     popular: true,
-    image: "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 2,
@@ -49,7 +52,8 @@ const products = [
     reviews: 145,
     owner: "Дмитрий К.",
     popular: false,
-    image: "https://images.unsplash.com/photo-1770386582823-3a7094e35b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3NjaCUyMGhhbW1lciUyMGRyaWxsJTIwY2FzZXxlbnwxfHx8fDE3NzE1NzM5NjR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1770386582823-3a7094e35b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3NjaCUyMGhhbW1lciUyMGRyaWxsJTIwY2FzZXxlbnwxfHx8fDE3NzE1NzM5NjR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 3,
@@ -61,7 +65,8 @@ const products = [
     reviews: 203,
     owner: "Иван П.",
     popular: true,
-    image: "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 4,
@@ -73,7 +78,8 @@ const products = [
     reviews: 56,
     owner: "Михаил С.",
     popular: false,
-    image: "https://images.unsplash.com/photo-1760376208640-2ece4c4a0adc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW1tZXIlMjBkcmlsbCUyMGNvbnN0cnVjdGlvbiUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1760376208640-2ece4c4a0adc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW1tZXIlMjBkcmlsbCUyMGNvbnN0cnVjdGlvbiUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 5,
@@ -85,7 +91,8 @@ const products = [
     reviews: 127,
     owner: "Сергей В.",
     popular: true,
-    image: "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 6,
@@ -97,7 +104,8 @@ const products = [
     reviews: 92,
     owner: "Андрей Т.",
     popular: false,
-    image: "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
 ];
 
@@ -113,11 +121,11 @@ export function CatalogPage() {
         {/* Breadcrumb */}
         <div className="overflow-x-auto pb-2 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex items-center gap-2 text-sm text-gray-600 whitespace-nowrap min-w-max">
-            <Link to="/" className="hover:text-gray-900">
+            <Link href="/" className="hover:text-gray-900">
               Главная
             </Link>
             <ChevronRight className="w-4 h-4 flex-shrink-0" />
-            <Link to="/catalog" className="hover:text-gray-900">
+            <Link href="/catalog" className="hover:text-gray-900">
               Каталог товаров
             </Link>
             <ChevronRight className="w-4 h-4 flex-shrink-0" />
@@ -131,16 +139,19 @@ export function CatalogPage() {
             Дрели и шуруповёрты
           </h1>
           <p className="text-gray-600 max-w-3xl">
-            Вы можете взять напрокат много дрелей и шуруповёртов рядом с вами! 
-            Используйте профессиональный инструмент для строительства, ремонта или 
-            личных нужд. Если вам нужен дорогой профессиональный инструмент, который 
-            вы не хотите покупать, или инструмент для разовых работ, мы можем помочь!
+            Вы можете взять напрокат много дрелей и шуруповёртов рядом с вами!
+            Используйте профессиональный инструмент для строительства, ремонта
+            или личных нужд. Если вам нужен дорогой профессиональный инструмент,
+            который вы не хотите покупать, или инструмент для разовых работ, мы
+            можем помочь!
           </p>
         </div>
 
         <div className="flex gap-8">
           {/* Filters Sidebar */}
-          <aside className={`${showFilters ? "block" : "hidden"} lg:block w-80 flex-shrink-0`}>
+          <aside
+            className={`${showFilters ? "block" : "hidden"} lg:block w-80 flex-shrink-0`}
+          >
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold">Фильтры</h2>
@@ -151,7 +162,10 @@ export function CatalogPage() {
 
               <div className="space-y-6">
                 {filters.map((filter) => (
-                  <div key={filter.title} className="border-b border-gray-200 pb-6 last:border-0">
+                  <div
+                    key={filter.title}
+                    className="border-b border-gray-200 pb-6 last:border-0"
+                  >
                     <h3 className="font-medium text-gray-900 mb-3">
                       {filter.title}
                     </h3>
@@ -162,7 +176,9 @@ export function CatalogPage() {
                           className="flex items-center gap-2 cursor-pointer"
                         >
                           <Checkbox />
-                          <span className="text-sm text-gray-700">{option}</span>
+                          <span className="text-sm text-gray-700">
+                            {option}
+                          </span>
                         </label>
                       ))}
                     </div>
@@ -176,14 +192,14 @@ export function CatalogPage() {
           <div className="flex-1">
             {/* Mobile Filter Toggle */}
             <div className="lg:hidden mb-4">
-              <Button
+              <AppButton
                 variant="outline"
                 onClick={() => setShowFilters(!showFilters)}
                 className="w-full"
               >
                 <SlidersHorizontal className="w-4 h-4 mr-2" />
                 Фильтры
-              </Button>
+              </AppButton>
             </div>
 
             {/* Results count */}
@@ -212,13 +228,9 @@ export function CatalogPage() {
 
             {/* Load More Button */}
             <div className="mt-12 text-center">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
-              >
+              <AppButton variant="outline" size="lg">
                 Показать больше
-              </Button>
+              </AppButton>
             </div>
           </div>
         </div>
