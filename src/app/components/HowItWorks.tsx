@@ -52,13 +52,13 @@ export function HowItWorks() {
 
                 <div className="relative bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 h-full">
                   {/* Number Badge */}
-                  <div className="absolute -top-4 -left-4 w-10 h-10 bg-yandex-yellow-500 text-yandex-dark-500 rounded-full flex items-center justify-center font-bold shadow-lg">
+                  <div className="absolute -top-4 -left-4 w-10 h-10 bg-yellow-500 text-dark-500 rounded-full flex items-center justify-center font-bold shadow-lg">
                     {step.number}
                   </div>
 
                   {/* Icon */}
                   <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center mb-4 mx-auto shadow-sm">
-                    <Icon className="w-8 h-8 text-yandex-yellow-600" />
+                    <Icon className="w-8 h-8 text-yellow-600" />
                   </div>
 
                   {/* Content */}

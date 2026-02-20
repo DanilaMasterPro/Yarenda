@@ -1,8 +1,6 @@
-import { Heart, Star, MapPin } from "lucide-react";
 import { Button } from "./ui/button";
-import { ImageWithFallback } from "./figma/ImageWithFallback";
 import { Link } from "react-router";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { ProductCard } from "./ProductCard";
 
 const listings = [
   {
@@ -94,82 +92,31 @@ export function FeaturedListings() {
             Популярные предложения
           </h2>
           <p className="text-lg text-gray-600">
-            Проверенные предметы от надежных арендодателей
+            Проверенные предметы от надежных арендодтелей
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {listings.map((listing) => (
-            <Link
+            <ProductCard
               key={listing.id}
-              to={`/listings/${listing.id}`}
-              className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-            >
-              {/* Image */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <ImageWithFallback
-                  src={listing.image}
-                  alt={listing.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <button className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
-                  <Heart className="w-5 h-5 text-gray-700" />
-                </button>
-                {listing.popular && (
-                  <span className="absolute top-4 left-4 px-3 py-1 bg-yandex-green-500 text-white text-sm rounded-full">
-                    Популярное
-                  </span>
-                )}
-                {/* Owner Avatar */}
-                <Avatar className="absolute bottom-3 right-3 w-12 h-12 border-2 border-white shadow-lg">
-                  <AvatarFallback className="bg-yandex-yellow-500 text-yandex-dark-500 text-sm font-semibold">
-                    {listing.owner.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-
-              {/* Content */}
-              <div className="p-5">
-                <h3 className="font-semibold text-lg text-gray-900 mb-2 group-hover:text-yandex-yellow-600 transition-colors">
-                  {listing.title}
-                </h3>
-
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-orange-400 fill-orange-400" />
-                    <span className="ml-1 text-sm font-medium text-gray-900">
-                      {listing.rating}
-                    </span>
-                  </div>
-                  <span className="text-sm text-gray-500">
-                    ({listing.reviews} отзывов)
-                  </span>
-                </div>
-
-                <div className="flex items-center text-sm text-gray-600 mb-4">
-                  <MapPin className="w-4 h-4 mr-1" />
-                  {listing.location}
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div>
-                    <span className="text-2xl font-bold text-gray-900">
-                      {listing.price}₽
-                    </span>
-                    <span className="text-gray-600 ml-1">/{listing.period}</span>
-                  </div>
-                  <Button className="bg-yandex-yellow-500 hover:bg-yandex-yellow-600 text-yandex-dark-500">
-                    Забронировать
-                  </Button>
-                </div>
-              </div>
-            </Link>
+              id={listing.id}
+              title={listing.title}
+              price={listing.price}
+              period={listing.period}
+              rating={listing.rating}
+              reviews={listing.reviews}
+              location={listing.location}
+              owner={listing.owner}
+              popular={listing.popular}
+              image={listing.image}
+            />
           ))}
         </div>
 
         <div className="text-center mt-12">
           <Link to="/listings">
-            <Button variant="outline" size="lg" className="border-yandex-yellow-500 text-yandex-yellow-600 hover:bg-yandex-yellow-50">
+            <Button variant="outline" size="lg" className="border-yellow-500 text-yellow-600 hover:bg-yellow-50">
               Показать больше
             </Button>
           </Link>

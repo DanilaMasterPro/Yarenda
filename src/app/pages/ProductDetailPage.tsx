@@ -7,6 +7,7 @@ import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { ProductCard } from "../components/ProductCard";
 
 const productData = {
   id: 1,
@@ -67,15 +68,49 @@ const productData = {
       id: 2,
       title: "Перфоратор Bosch",
       price: 900,
+      period: "день",
       rating: 5.0,
+      reviews: 145,
+      location: "Москва, Южный округ",
+      owner: "Александр М.",
+      popular: false,
       image: "https://images.unsplash.com/photo-1770386582823-3a7094e35b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3NjaCUyMGhhbW1lciUyMGRyaWxsJTIwY2FzZXxlbnwxfHx8fDE3NzE1NzM5NjR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     },
     {
       id: 3,
       title: "Шуруповёрт Makita",
       price: 550,
+      period: "день",
       rating: 4.8,
+      reviews: 203,
+      location: "Москва, Центр",
+      owner: "Александр М.",
+      popular: true,
       image: "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    },
+    {
+      id: 4,
+      title: "Электролобзик Bosch",
+      price: 500,
+      period: "день",
+      rating: 4.7,
+      reviews: 56,
+      location: "Москва, Центр",
+      owner: "Александр М.",
+      popular: false,
+      image: "https://images.unsplash.com/photo-1615746363486-92cd8c5e0a90?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqaWdzYXclMjBwb3dlciUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY2fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    },
+    {
+      id: 5,
+      title: "Циркулярная пила Makita",
+      price: 700,
+      period: "день",
+      rating: 4.9,
+      reviews: 145,
+      location: "Москва, Центр",
+      owner: "Александр М.",
+      popular: true,
+      image: "https://images.unsplash.com/photo-1619759247378-6a73e3ad45f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaXJjdWxhciUyMHNhdyUyMGNvbnN0cnVjdGlvbnxlbnwxfHx8fDE3NzE1NzE4NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     },
   ],
 };
@@ -93,11 +128,11 @@ export function ProductDetailPage() {
         {/* Breadcrumb */}
         <div className="overflow-x-auto pb-2 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex items-center gap-2 text-sm text-gray-600 whitespace-nowrap min-w-max">
-            <Link to="/" className="hover:text-yandex-yellow-600">
+            <Link to="/" className="hover:text-gray-900">
               Главная
             </Link>
             <ChevronRight className="w-4 h-4 flex-shrink-0" />
-            <Link to="/catalog" className="hover:text-yandex-yellow-600">
+            <Link to="/catalog" className="hover:text-gray-900">
               Дрели и шуруповёрты
             </Link>
             <ChevronRight className="w-4 h-4 flex-shrink-0" />
@@ -128,7 +163,7 @@ export function ProductDetailPage() {
                   onClick={() => setSelectedImage(index)}
                   className={`relative aspect-square w-24 rounded-lg overflow-hidden border-2 transition-all ${
                     selectedImage === index
-                      ? "border-yandex-yellow-500"
+                      ? "border-yellow-500"
                       : "border-transparent hover:border-gray-300"
                   }`}
                 >
@@ -158,7 +193,7 @@ export function ProductDetailPage() {
             <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
               <div className="flex items-center gap-4 mb-4">
                 <Avatar className="w-16 h-16">
-                  <AvatarFallback className="bg-yandex-yellow-100 text-yandex-yellow-600 text-xl">
+                  <AvatarFallback className="bg-yellow-100 text-yellow-600 text-xl">
                     {productData.owner.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
@@ -183,7 +218,7 @@ export function ProductDetailPage() {
                   const Icon = feature.icon;
                   return (
                     <div key={index} className="flex items-center gap-3">
-                      <Icon className="w-5 h-5 text-yandex-yellow-600" />
+                      <Icon className="w-5 h-5 text-yellow-600" />
                       <span className="text-gray-700">{feature.label}</span>
                     </div>
                   );
@@ -206,7 +241,7 @@ export function ProductDetailPage() {
               <h3 className="font-semibold text-lg mb-4">Местоположение</h3>
               <div className="relative w-full h-64 bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
                 <div className="text-center">
-                  <MapPin className="w-12 h-12 text-yandex-yellow-600 mx-auto mb-3" />
+                  <MapPin className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
                   <p className="text-gray-600 text-sm">Карта местоположения</p>
                   <p className="text-xs text-gray-500">{productData.location}</p>
                 </div>
@@ -236,7 +271,7 @@ export function ProductDetailPage() {
               <p className="text-sm text-gray-600 mb-4">за день аренды</p>
 
               <div className="space-y-3">
-                <Button className="w-full h-12 bg-yandex-yellow-500 hover:bg-yandex-yellow-600 text-yandex-dark-500 text-lg">
+                <Button className="w-full h-12 bg-yellow-500 hover:bg-yellow-600 text-dark-500 text-lg">
                   Отправить запрос
                 </Button>
                 <p className="text-xs text-center text-gray-500">
@@ -256,7 +291,7 @@ export function ProductDetailPage() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <Avatar>
-                      <AvatarFallback className="bg-yandex-yellow-100 text-yandex-yellow-600">
+                      <AvatarFallback className="bg-yellow-100 text-yellow-600">
                         {review.author.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
@@ -296,31 +331,19 @@ export function ProductDetailPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {productData.relatedProducts.map((product) => (
-              <Link
+              <ProductCard
                 key={product.id}
-                to={`/product/${product.id}`}
-                className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all"
-              >
-                <div className="relative aspect-square">
-                  <ImageWithFallback
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-yandex-yellow-600">
-                    {product.title}
-                  </h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold">{product.price}₽</span>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4 text-orange-400 fill-orange-400" />
-                      <span className="text-sm font-medium">{product.rating}</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
+                id={product.id}
+                title={product.title}
+                price={product.price}
+                period={product.period}
+                rating={product.rating}
+                reviews={product.reviews}
+                location={product.location}
+                owner={product.owner}
+                popular={product.popular}
+                image={product.image}
+              />
             ))}
           </div>
         </div>

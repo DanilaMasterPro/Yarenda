@@ -16,7 +16,7 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20 gap-6">
             {/* Logo */}
-            <Link to="/" className="text-2xl font-bold text-yandex-yellow-500 flex-shrink-0">
+            <Link to="/" className="text-2xl font-bold text-gray-900 flex-shrink-0">
               Яренда
             </Link>
 
@@ -37,7 +37,7 @@ export function Header() {
                 />
                 <Button 
                   size="icon"
-                  className="bg-yandex-yellow-500 hover:bg-yandex-yellow-600 text-yandex-dark-500 rounded-full m-1.5 h-10 w-10"
+                  className="bg-yellow-500 hover:bg-yellow-600 text-dark-500 rounded-full m-1.5 h-10 w-10"
                 >
                   <Search className="h-5 w-5" />
                 </Button>
@@ -46,8 +46,11 @@ export function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-6">
-              <Link to="/catalog" className="text-gray-700 hover:text-yandex-yellow-600 transition-colors font-medium">
+              <Link to="/catalog" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">
                 Каталог
+              </Link>
+              <Link to="/categories" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">
+                Категории
               </Link>
             </nav>
 
@@ -63,7 +66,7 @@ export function Header() {
               >
                 <User className="h-5 w-5" />
               </Button>
-              <Button className="hidden lg:flex bg-yandex-yellow-500 hover:bg-yandex-yellow-600 text-yandex-dark-500">
+              <Button className="hidden lg:flex bg-yellow-500 hover:bg-yellow-600 text-dark-500">
                 Разместить объявление
               </Button>
               <Button variant="ghost" size="icon" className="md:hidden">

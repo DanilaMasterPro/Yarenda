@@ -1,4 +1,4 @@
-import { DollarSign, Leaf, Users, Shield } from "lucide-react";
+import { DollarSign, Leaf, Users, Shield, Wallet } from "lucide-react";
 
 const benefits = [
   {
@@ -14,10 +14,10 @@ const benefits = [
     color: "bg-green-100 text-green-600",
   },
   {
-    icon: Users,
+    icon: Wallet,
     title: "Создавайте сообщество",
     description: "Зарабатывайте на вещах, которые редко используете, и познакомьтесь с соседями",
-    color: "bg-yandex-yellow-100 text-yandex-yellow-600",
+    color: "bg-yellow-100 text-yellow-600",
   },
   {
     icon: Shield,

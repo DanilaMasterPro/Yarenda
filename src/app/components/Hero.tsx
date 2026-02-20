@@ -13,10 +13,10 @@ export function Hero() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Аренда строительного инструмента
+              Аренда всего, что вам нужно
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 mb-10">
-              Профессиональное оборудование для ремонта и стройки по доступным ценам. 
+              От строительных инструментов до электроники и садовой техники. 
               Экономьте деньги — арендуйте вместо покупки.
             </p>
 
@@ -41,7 +41,7 @@ export function Hero() {
                     readOnly
                   />
                 </div>
-                <Button className="h-12 px-8 bg-yandex-yellow-500 hover:bg-yandex-yellow-600 text-yandex-dark-500">
+                <Button className="h-12 px-8 bg-yellow-500 hover:bg-yellow-600 text-dark-500">
                   Найти
                 </Button>
               </div>
@@ -50,10 +50,10 @@ export function Hero() {
             {/* Popular Searches */}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <span className="text-sm text-gray-600">Популярно:</span>
-              {["Перфоратор", "Шуруповёрт", "Болгарка", "Отбойный молоток", "Лобзик"].map((item) => (
+              {["Перфоратор", "Ноутбук", "Камера", "Газонокосилка", "Велосипед"].map((item) => (
                 <button
                   key={item}
-                  className="text-sm px-4 py-2 bg-white rounded-full border border-gray-200 hover:border-yandex-yellow-500 hover:text-yandex-yellow-600 transition-colors"
+                  className="text-sm px-4 py-2 bg-white rounded-full border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
                 >
                   {item}
                 </button>

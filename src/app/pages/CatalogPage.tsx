@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { ChevronRight, Heart, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Checkbox } from "../components/ui/checkbox";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
-import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import { ProductCard } from "../components/ProductCard";
 
 const filters = [
   {
@@ -35,6 +34,7 @@ const products = [
     price: "650",
     period: "день",
     rating: 4.8,
+    reviews: 89,
     owner: "Александр М.",
     popular: true,
     image: "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -46,6 +46,7 @@ const products = [
     price: "900",
     period: "день",
     rating: 5.0,
+    reviews: 145,
     owner: "Дмитрий К.",
     popular: false,
     image: "https://images.unsplash.com/photo-1770386582823-3a7094e35b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3NjaCUyMGhhbW1lciUyMGRyaWxsJTIwY2FzZXxlbnwxfHx8fDE3NzE1NzM5NjR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -57,6 +58,7 @@ const products = [
     price: "550",
     period: "день",
     rating: 4.9,
+    reviews: 203,
     owner: "Иван П.",
     popular: true,
     image: "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -64,10 +66,11 @@ const products = [
   {
     id: 4,
     title: "Ударная дрель Bosch GSB 13",
-    location: "Москва, Западный округ",
+    location: "Мква, Западный округ",
     price: "600",
     period: "день",
     rating: 4.7,
+    reviews: 56,
     owner: "Михаил С.",
     popular: false,
     image: "https://images.unsplash.com/photo-1760376208640-2ece4c4a0adc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW1tZXIlMjBkcmlsbCUyMGNvbnN0cnVjdGlvbiUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -79,6 +82,7 @@ const products = [
     price: "1200",
     period: "день",
     rating: 5.0,
+    reviews: 127,
     owner: "Сергей В.",
     popular: true,
     image: "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -90,6 +94,7 @@ const products = [
     price: "700",
     period: "день",
     rating: 4.8,
+    reviews: 92,
     owner: "Андрей Т.",
     popular: false,
     image: "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
@@ -98,6 +103,7 @@ const products = [
 
 export function CatalogPage() {
   const [showFilters, setShowFilters] = useState(true);
+  const [filteredProducts, setFilteredProducts] = useState(products);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -107,12 +113,12 @@ export function CatalogPage() {
         {/* Breadcrumb */}
         <div className="overflow-x-auto pb-2 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <div className="flex items-center gap-2 text-sm text-gray-600 whitespace-nowrap min-w-max">
-            <Link to="/" className="hover:text-yandex-yellow-600">
+            <Link to="/" className="hover:text-gray-900">
               Главная
             </Link>
             <ChevronRight className="w-4 h-4 flex-shrink-0" />
-            <Link to="/catalog" className="hover:text-yandex-yellow-600">
-              Строительное оборудование и инструменты
+            <Link to="/catalog" className="hover:text-gray-900">
+              Каталог товаров
             </Link>
             <ChevronRight className="w-4 h-4 flex-shrink-0" />
             <span className="text-gray-900">Дрели и шуруповёрты</span>
@@ -138,7 +144,7 @@ export function CatalogPage() {
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold">Фильтры</h2>
-                <button className="text-sm text-yandex-yellow-600 hover:underline">
+                <button className="text-sm text-yellow-600 hover:underline">
                   Сбросить все
                 </button>
               </div>
@@ -186,66 +192,21 @@ export function CatalogPage() {
             </p>
 
             {/* Product Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product) => (
-                <Link
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {filteredProducts.map((product) => (
+                <ProductCard
                   key={product.id}
-                  to={`/product/${product.id}`}
-                  className="group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
-                >
-                  {/* Image */}
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <ImageWithFallback
-                      src={product.image}
-                      alt={product.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <button 
-                      className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        // Add to favorites logic
-                      }}
-                    >
-                      <Heart className="w-5 h-5 text-gray-700" />
-                    </button>
-                    {product.popular && (
-                      <span className="absolute top-3 left-3 px-3 py-1 bg-yandex-green-500 text-white text-sm rounded-full">
-                        Популярное
-                      </span>
-                    )}
-                    {/* Owner Avatar */}
-                    <Avatar className="absolute bottom-3 right-3 w-12 h-12 border-2 border-white shadow-lg">
-                      <AvatarFallback className="bg-yandex-yellow-500 text-yandex-dark-500 text-sm font-semibold">
-                        {product.owner.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-yandex-yellow-600 transition-colors">
-                      {product.title}
-                    </h3>
-
-                    <p className="text-sm text-gray-600 mb-3">
-                      {product.location}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-xl font-bold text-gray-900">
-                          {product.price}₽
-                        </span>
-                        <span className="text-gray-600 text-sm">/{product.period}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-orange-400">★</span>
-                        <span className="text-sm font-medium">{product.rating}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                  id={product.id}
+                  title={product.title}
+                  price={product.price}
+                  period={product.period}
+                  rating={product.rating}
+                  reviews={product.reviews}
+                  location={product.location}
+                  owner={product.owner}
+                  popular={product.popular}
+                  image={product.image}
+                />
               ))}
             </div>
 
@@ -254,7 +215,7 @@ export function CatalogPage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-yandex-yellow-500 text-yandex-yellow-600 hover:bg-yandex-yellow-50"
+                className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400"
               >
                 Показать больше
               </Button>

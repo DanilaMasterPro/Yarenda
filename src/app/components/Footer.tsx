@@ -31,7 +31,7 @@ export function Footer() {
                   <li key={link}>
                     <a
                       href="#"
-                      className="text-sm hover:text-yandex-yellow-400 transition-colors"
+                      className="text-sm hover:text-gray-300 transition-colors"
                     >
                       {link}
                     </a>
@@ -43,7 +43,7 @@ export function Footer() {
 
           {/* Support Button */}
           <div className="col-span-2 md:col-span-2 lg:col-span-2 flex md:justify-end items-start">
-            <button className="bg-yandex-yellow-500 hover:bg-yandex-yellow-600 text-yandex-dark-500 px-6 py-2.5 rounded-lg font-medium transition-colors">
+            <button className="bg-yellow-500 hover:bg-yellow-600 text-dark-500 px-6 py-2.5 rounded-lg font-medium transition-colors">
               Поддержка
             </button>
           </div>
@@ -56,13 +56,13 @@ export function Footer() {
               © 2026 Яренда. Все права защищены.
             </p>
             <div className="flex gap-6 text-sm">
-              <a href="#" className="hover:text-yandex-yellow-400 transition-colors">
+              <a href="#" className="hover:text-gray-100 transition-colors">
                 Условия использования
               </a>
-              <a href="#" className="hover:text-yandex-yellow-400 transition-colors">
+              <a href="#" className="hover:text-gray-100 transition-colors">
                 Политика конфиденциальности
               </a>
-              <a href="#" className="hover:text-yandex-yellow-400 transition-colors">
+              <a href="#" className="hover:text-gray-100 transition-colors">
                 Cookies
               </a>
             </div>
