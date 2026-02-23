@@ -33,7 +33,7 @@ export function ProductCard({
 }: ProductCardProps) {
   return (
     <Link
-      href={`/listings/${id}`}
+      href={`/product/${id}`}
       className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
     >
       {/* Image */}
