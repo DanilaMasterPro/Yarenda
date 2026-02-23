@@ -14,7 +14,7 @@ import {
   Shield,
   Heart,
 } from "lucide-react";
-import { AppButton } from "../components/ui/AppButton";
+import { Button } from "../components/ui/button";
 import { Calendar } from "../components/ui/calendar";
 import { ImageWithFallback } from "../components/ui/ImageWithFallback";
 import { Header } from "../components/widgets/Header";
@@ -244,9 +244,9 @@ export function ProductDetailPage() {
                 })}
               </div>
 
-              <AppButton variant="secondary" className="w-full mb-4">
+              <Button variant="secondary" className="w-full mb-4">
                 Отправить сообщение
-              </AppButton>
+              </Button>
             </div>
 
             {/* Description */}
@@ -290,13 +290,9 @@ export function ProductDetailPage() {
               <p className="text-sm text-gray-600 mb-4">за день аренды</p>
 
               <div className="space-y-3">
-                <AppButton
-                  variant="primary"
-                  size="lg"
-                  className="w-full text-lg"
-                >
+                <Button variant="primary" size="lg" className="w-full text-lg">
                   Отправить запрос
-                </AppButton>
+                </Button>
                 <p className="text-xs text-center text-gray-500">
                   🔒 Вы не будете платить до подтверждения
                 </p>
@@ -345,7 +341,7 @@ export function ProductDetailPage() {
             ))}
           </div>
           <div className="mt-6 text-center">
-            <AppButton variant="outline">Показать больше отзывов</AppButton>
+            <Button variant="outline">Показать больше отзывов</Button>
           </div>
         </div>
 

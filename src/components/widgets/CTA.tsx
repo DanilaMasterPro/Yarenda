@@ -1,4 +1,4 @@
-import { AppButton } from "../ui/AppButton";
+import { Button } from "../ui/button";
 import { ImageWithFallback } from "../ui/ImageWithFallback";
 
 export function CTA() {
@@ -17,16 +17,16 @@ export function CTA() {
                 объявления занимает всего 5 минут.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <AppButton
+                <Button
                   variant="primary"
                   size="lg"
                   className="bg-gray-900 text-white hover:bg-gray-800"
                 >
                   Разместить объявление
-                </AppButton>
-                <AppButton variant="secondary" size="lg">
+                </Button>
+                <Button variant="secondary" size="lg">
                   Узнать больше
-                </AppButton>
+                </Button>
               </div>
 
               {/* Stats */}

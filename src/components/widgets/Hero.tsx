@@ -2,7 +2,6 @@
 
 import { Search, MapPin } from "lucide-react";
 import { Button } from "../ui/button";
-import { AppButton } from "../ui/AppButton";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { LocationModal } from "../modals/LocationModal";
@@ -19,7 +18,7 @@ export function Hero() {
               Аренда всего, что вам нужно
             </h1>
             <p className="text-lg sm:text-xl text-gray-600 mb-10">
-              От строительных инструментов до электроники и садовой техники. 
+              От строительных инструментов до электроники и садовой техники.
               Экономьте деньги — арендуйте вместо покупки.
             </p>
 
@@ -44,16 +43,22 @@ export function Hero() {
                     readOnly
                   />
                 </div>
-                <AppButton variant="primary" size="lg" className="h-12 px-8">
+                <Button variant="primary" size="lg" className="h-12 px-8">
                   Найти
-                </AppButton>
+                </Button>
               </div>
             </div>
 
             {/* Popular Searches */}
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <span className="text-sm text-gray-600">Популярно:</span>
-              {["Перфоратор", "Ноутбук", "Камера", "Газонокосилка", "Велосипед"].map((item) => (
+              {[
+                "Перфоратор",
+                "Ноутбук",
+                "Камера",
+                "Газонокосилка",
+                "Велосипед",
+              ].map((item) => (
                 <button
                   key={item}
                   className="text-sm px-4 py-2 bg-white rounded-full border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
@@ -67,7 +72,10 @@ export function Hero() {
       </section>
 
       {/* Location Modal */}
-      <LocationModal open={showLocationModal} onOpenChange={setShowLocationModal} />
+      <LocationModal
+        open={showLocationModal}
+        onOpenChange={setShowLocationModal}
+      />
     </>
   );
 }

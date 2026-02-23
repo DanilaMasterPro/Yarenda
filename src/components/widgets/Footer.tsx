@@ -1,4 +1,4 @@
-import { AppButton } from "../ui/AppButton";
+import { Button } from "../ui/button";
 
 const footerLinks = {
   company: {
@@ -45,9 +45,7 @@ export function Footer() {
 
           {/* Support Button */}
           <div className="col-span-2 md:col-span-2 lg:col-span-2 flex md:justify-end items-start">
-            <AppButton variant="primary">
-              Поддержка
-            </AppButton>
+            <Button variant="primary">Поддержка</Button>
           </div>
         </div>
 
