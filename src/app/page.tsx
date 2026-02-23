@@ -1,11 +1,11 @@
-import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import { Categories } from "@/components/Categories";
-import { FeaturedListings } from "@/components/FeaturedListings";
-import { HowItWorks } from "@/components/HowItWorks";
-import { Benefits } from "@/components/Benefits";
-import { CTA } from "@/components/CTA";
-import { Footer } from "@/components/Footer";
+import { Header } from "@/components/widgets/Header";
+import { Hero } from "@/components/widgets/Hero";
+import { Categories } from "@/components/widgets/Categories";
+import { FeaturedListings } from "@/components/widgets/FeaturedListings";
+import { HowItWorks } from "@/components/widgets/HowItWorks";
+import { Benefits } from "@/components/widgets/Benefits";
+import { CTA } from "@/components/widgets/CTA";
+import { Footer } from "@/components/widgets/Footer";
 
 export default function HomePage() {
   return (

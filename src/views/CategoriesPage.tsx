@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
-import { CategoryCard } from "../components/CategoryCard";
+import { Header } from "../components/widgets/Header";
+import { Footer } from "../components/widgets/Footer";
+import { CategoryCard } from "../components/widgets/CategoryCard";
 import { allCategories } from "../data/categories";
 
 export function CategoriesPage() {

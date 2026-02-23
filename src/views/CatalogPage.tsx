@@ -5,9 +5,9 @@ import Link from "next/link";
 import { ChevronDown, ChevronRight, SlidersHorizontal } from "lucide-react";
 import { AppButton } from "../components/ui/AppButton";
 import { Checkbox } from "../components/ui/checkbox";
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
-import { ProductCard } from "../components/ProductCard";
+import { Header } from "../components/widgets/Header";
+import { Footer } from "../components/widgets/Footer";
+import { ProductCard } from "../components/widgets/ProductCard";
 
 const filters = [
   {
