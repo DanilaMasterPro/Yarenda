@@ -7,34 +7,27 @@ import { allCategories } from "@/data/categories";
 
 export default function CategoriesPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header */}
+    <div className="min-h-screen bg-gray-50">
       <Header />
 
-      {/* Breadcrumbs */}
-      <div className="border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Breadcrumb */}
+        <div className="overflow-x-auto pb-2 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex items-center gap-2 text-sm text-gray-600 whitespace-nowrap min-w-max">
             <Link href="/" className="hover:text-gray-900">
               Главная
             </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-gray-900 font-medium">Все категории</span>
+            <ChevronRight className="w-4 h-4 flex-shrink-0" />
+            <span className="text-gray-900">Все категории</span>
           </div>
         </div>
-      </div>
 
-      {/* Page Header */}
-      <div className="border-b border-gray-200 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-            Все категории
-          </h1>
+        {/* Title */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Все категории</h1>
         </div>
-      </div>
 
-      {/* Categories Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {allCategories.map((category) => (
             <CategoryCard key={category.slug} category={category} />

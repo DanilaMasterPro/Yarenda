@@ -36,41 +36,43 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
             {/* Map placeholder - you can integrate Google Maps or other map service */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <MapPin className="w-16 h-16 text-teal-600 mx-auto mb-4" />
+                <MapPin className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
                 <p className="text-gray-600 mb-2">
                   Увеличьте или переместите карту, чтобы найти адрес
                 </p>
-                <Button className="bg-teal-600 hover:bg-teal-700">
-                  Использовать моё местоположение
-                </Button>
+                <Button>Использовать моё местоположение</Button>
               </div>
             </div>
 
             {/* Map controls */}
-            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-2">
+            {/* <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col gap-2">
               <button className="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center hover:bg-gray-50">
                 <span className="text-xl">+</span>
               </button>
               <button className="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center hover:bg-gray-50">
                 <span className="text-xl">−</span>
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Popular Locations */}
           <div className="mt-6">
             <p className="text-sm text-gray-600 mb-3">Популярные города:</p>
             <div className="flex flex-wrap gap-2">
-              {["Москва", "Санкт-Петербург", "Казань", "Екатеринбург", "Новосибирск"].map(
-                (city) => (
-                  <button
-                    key={city}
-                    className="px-4 py-2 bg-gray-100 rounded-full text-sm hover:bg-teal-50 hover:text-teal-600 transition-colors"
-                  >
-                    {city}
-                  </button>
-                )
-              )}
+              {[
+                "Москва",
+                "Санкт-Петербург",
+                "Казань",
+                "Екатеринбург",
+                "Новосибирск",
+              ].map((city) => (
+                <button
+                  key={city}
+                  className="px-4 py-2 bg-gray-100 rounded-full text-sm transition-colors"
+                >
+                  {city}
+                </button>
+              ))}
             </div>
           </div>
         </div>

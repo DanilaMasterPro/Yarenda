@@ -57,8 +57,8 @@ export default function CatalogPage() {
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-semibold">Фильтры</h2>
-                <button className="text-sm text-yellow-600 hover:underline">
-                  Сбросить все
+                <button className="text-sm text-red-300 hover:underline">
+                  Сбросить
                 </button>
               </div>
 

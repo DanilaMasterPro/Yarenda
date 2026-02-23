@@ -29,7 +29,7 @@ export function Categories() {
 
         {/* View All Categories Link */}
         <div className="text-center mt-12">
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" size="lg">
             <Link href="/categories">Посмотреть все категории</Link>
           </Button>
         </div>

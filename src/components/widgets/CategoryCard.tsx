@@ -31,13 +31,13 @@ export function CategoryCard({
   return (
     <div className="space-y-4">
       {/* Category Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">{category.title}</h2>
+      <div className="flex items-center">
         <Link
           href={`/catalog?category=${category.slug}`}
-          className="text-sm text-sky-500 hover:underline"
+          className="flex items-center gap-1 group cursor-pointer"
         >
-          все
+          <h2 className="text-xl font-bold text-gray-900">{category.title}</h2>
+          <ChevronRight className="w-5 h-5 relative left-1 top-[2px] text-gray-400 transition-transform duration-200 group-hover:translate-x-[5px]" />
         </Link>
       </div>
 

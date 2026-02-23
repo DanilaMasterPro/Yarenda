@@ -35,7 +35,7 @@ export function FeaturedListings() {
         </div>
 
         <div className="text-center mt-12">
-          <Button asChild variant="outline">
+          <Button asChild variant="outline" size="lg">
             <Link href="/catalog">Показать больше</Link>
           </Button>
         </div>
