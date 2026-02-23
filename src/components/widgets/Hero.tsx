@@ -50,7 +50,7 @@ export function Hero() {
             </div>
 
             {/* Popular Searches */}
-            <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <div className="mt-8 flex flex-wrap justify-center items-center gap-3">
               <span className="text-sm text-gray-600">Популярно:</span>
               {[
                 "Перфоратор",

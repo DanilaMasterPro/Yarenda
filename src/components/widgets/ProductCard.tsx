@@ -34,7 +34,7 @@ export function ProductCard({
   return (
     <Link
       href={`/product/${id}`}
-      className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+      className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 "
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -73,7 +73,7 @@ export function ProductCard({
           <span className="text-sm text-gray-500">({reviews} отзывов)</span>
 
           {/* Owner Avatar */}
-          <Avatar className="absolute right-0 w-10 h-10 border-2 border-gray-100">
+          <Avatar className="absolute top-1 right-0 w-10 h-10 border-2 border-gray-100">
             <AvatarFallback className="bg-yellow-500 text-dark-500 text-sm font-semibold">
               {owner.charAt(0)}
             </AvatarFallback>

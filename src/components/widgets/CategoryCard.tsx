@@ -20,8 +20,11 @@ interface CategoryCardProps {
   maxSubcategories?: number;
 }
 
-export function CategoryCard({ category, maxSubcategories }: CategoryCardProps) {
-  const displayedSubcategories = maxSubcategories 
+export function CategoryCard({
+  category,
+  maxSubcategories,
+}: CategoryCardProps) {
+  const displayedSubcategories = maxSubcategories
     ? category.subcategories.slice(0, maxSubcategories)
     : category.subcategories;
 
@@ -29,14 +32,12 @@ export function CategoryCard({ category, maxSubcategories }: CategoryCardProps) 
     <div className="space-y-4">
       {/* Category Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">
-          {category.title}
-        </h2>
+        <h2 className="text-xl font-bold text-gray-900">{category.title}</h2>
         <Link
           href={`/catalog?category=${category.slug}`}
-          className="text-sm text-yellow-600 hover:underline"
+          className="text-sm text-sky-500 hover:underline"
         >
-          Показать все
+          все
         </Link>
       </div>
 
@@ -51,7 +52,9 @@ export function CategoryCard({ category, maxSubcategories }: CategoryCardProps) 
               className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
             >
               {/* Icon */}
-              <div className={`${subcategory.iconBg} ${subcategory.iconColor} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0`}>
+              <div
+                className={`${subcategory.iconBg} ${subcategory.iconColor} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0`}
+              >
                 <Icon className="w-6 h-6" />
               </div>
 
@@ -60,9 +63,7 @@ export function CategoryCard({ category, maxSubcategories }: CategoryCardProps) 
                 <h3 className="font-medium text-gray-900">
                   {subcategory.name}
                 </h3>
-                <p className="text-sm text-gray-500">
-                  {subcategory.count}
-                </p>
+                <p className="text-sm text-gray-500">{subcategory.count}</p>
               </div>
 
               {/* Arrow */}
