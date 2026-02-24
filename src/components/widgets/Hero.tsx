@@ -86,7 +86,6 @@ export function Hero() {
                   className="rounded-full h-10 px-5 text-sm font-semibold gap-1.5 shrink-0"
                 >
                   Найти
-                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
 
