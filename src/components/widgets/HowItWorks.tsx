@@ -1,37 +1,46 @@
-import { Search, Calendar, Package, CheckCircle } from "lucide-react";
+import Image from "next/image";
 
-const steps = [
+const sections = [
   {
-    number: 1,
-    icon: Search,
-    title: "Найдите то, что нужно",
-    description: "Выберите предмет из тысяч объявлений в вашем районе",
+    title: "НАЙДИТЕ ТО, ЧТО НУЖНО",
+    description:
+      "Тысячи предложений в одном месте. Ищите среди сотен категорий — от инструментов и техники до спортивного снаряжения и товаров для праздника. Умный поиск поможет найти идеальный вариант рядом с вами.",
+    image: "/assets/banner1.png",
+    imageAlt: "Разнообразие инструментов и техники для аренды",
+    imagePosition: "right" as const,
   },
   {
-    number: 2,
-    icon: Calendar,
-    title: "Забронируйте онлайн",
-    description: "Выберите даты и оформите бронирование за несколько кликов",
+    title: "ЗАБРОНИРУЙТЕ ОНЛАЙН",
+    description:
+      "Быстро и удобно, без звонков и очередей. Выберите нужные даты в календаре, согласуйте детали с владельцем прямо в чате и оформите бронирование в пару кликов. Безопасная оплата онлайн.",
+    image: "/assets/banner2.png",
+    imageAlt: "Онлайн бронирование через смартфон",
+    imagePosition: "left" as const,
   },
   {
-    number: 3,
-    icon: Package,
-    title: "Заберите или получите доставку",
-    description: "Встретьтесь с владельцем или закажите доставку к двери",
+    title: "ЗАБЕРИТЕ ИЛИ ПОЛУЧИТЕ ДОСТАВКУ",
+    description:
+      "Гибкие варианты получения на любой случай. Договоритесь о встрече в удобном месте или закажите доставку прямо до двери. Проверьте товар при получении и начинайте использовать.",
+    image: "/assets/banner3.png",
+    imageAlt: "Доставка и передача товара",
+    imagePosition: "right" as const,
   },
   {
-    number: 4,
-    icon: CheckCircle,
-    title: "Пользуйтесь и возвращайте",
-    description: "Наслаждайтесь использованием и верните в оговоренный срок",
+    title: "ПОЛЬЗУЙТЕСЬ И ВОЗВРАЩАЙТЕ",
+    description:
+      "Наслаждайтесь использованием без забот. Используйте арендованные вещи сколько нужно в рамках срока аренды. Верните в оговоренное время и в том же состоянии — это всё, что нужно для успешной аренды.",
+    image: "/assets/banner4.png",
+    imageAlt: "Использование арендованного оборудования",
+    imagePosition: "left" as const,
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        {/* Header */}
+        <div className="text-center mb-20">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             Как это работает
           </h2>
@@ -40,38 +49,39 @@ export function HowItWorks() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step) => {
-            const Icon = step.icon;
-            return (
-              <div key={step.number} className="relative">
-                {/* Connecting Line */}
-                {step.number < 4 && (
-                  <div className="hidden lg:block absolute top-12 left-[60%] w-full h-0.5 bg-gradient-to-r from-gray-200 to-gray-300" />
-                )}
-
-                <div className="relative bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-6 h-full">
-                  {/* Number Badge */}
-                  <div className="absolute -top-4 -left-4 w-10 h-10 bg-yellow-500 text-dark-500 rounded-full flex items-center justify-center font-bold shadow-lg">
-                    {step.number}
-                  </div>
-
-                  {/* Icon */}
-                  <div className="w-16 h-16 bg-white rounded-xl flex items-center justify-center mb-4 mx-auto shadow-sm">
-                    <Icon className="w-8 h-8 text-yellow-600" />
-                  </div>
-
-                  {/* Content */}
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2 text-center">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 text-center">
-                    {step.description}
-                  </p>
+        {/* Sections */}
+        <div className="space-y-24">
+          {sections.map((section, index) => (
+            <div
+              key={index}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+            >
+              {/* Image - always first on mobile, positioned by imagePosition on desktop */}
+              <div
+                className={`order-1 ${section.imagePosition === "right" ? "lg:order-2" : "lg:order-1"}`}
+              >
+                <div className="relative h-80 sm:h-96 lg:h-[450px] lg:w-[450px] rounded-2xl overflow-hidden">
+                  <Image
+                    src={section.image}
+                    alt={section.imageAlt}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               </div>
-            );
-          })}
+              {/* Text Content */}
+              <div
+                className={`order-2 ${section.imagePosition === "right" ? "lg:order-1" : "lg:order-2"}`}
+              >
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 tracking-wide">
+                  {section.title}
+                </h3>
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  {section.description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

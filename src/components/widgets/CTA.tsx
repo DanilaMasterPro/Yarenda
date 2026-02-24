@@ -8,7 +8,7 @@ export function CTA() {
         <div className="relative bg-gray-900 rounded-3xl overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             {/* Content */}
-            <div className="p-8 lg:p-12 text-white">
+            <div className="p-8 lg:p-12 text-white order-2 lg:order-1">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">
                 Начните зарабатывать на своих вещах
               </h2>
@@ -51,7 +51,7 @@ export function CTA() {
             </div>
 
             {/* Image */}
-            <div className="relative h-full min-h-[300px] lg:min-h-[500px]">
+            <div className="relative h-full min-h-[300px] lg:min-h-[500px] order-1 lg:order-2">
               <ImageWithFallback
                 src="https://images.unsplash.com/photo-1620825141088-a824daf6a46b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjB3b3JrZXIlMjB0b29scyUyMGVxdWlwbWVudCUyMHdvcmtzaG9wfGVufDF8fHx8MTc3MTU3NTgwM3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
                 alt="Construction tools workshop"
