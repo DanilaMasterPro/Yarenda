@@ -12,20 +12,32 @@ export function Hero() {
   return (
     <>
       <section className="relative bg-white py-16 lg:py-24 max-lg:pt-5 overflow-hidden">
+        {/* Mobile background image */}
+        <div className="absolute inset-0 lg:hidden">
+          <Image
+            src="/assets/bg_hero.jpg"
+            alt=""
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/55" />
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left Column */}
-            <div className="max-w-xl order-2 lg:order-1">
+            <div className="max-w-xl relative z-10">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-2 mb-8 shadow-sm">
+              <div className="inline-flex items-center gap-2 bg-white border border-gray-200 mt-10 max-lg:bg-white/15 max-lg:border-white/30 rounded-full px-4 py-2 mb-8 shadow-sm">
                 <span className="text-lg">✨</span>
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-gray-700 max-lg:text-white">
                   №1 платформа аренды в России
                 </span>
               </div>
 
               {/* Heading */}
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-gray-900 leading-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-gray-900 max-lg:text-white leading-tight mb-6">
                 Арендуй{" "}
                 <span className="relative inline-block">
                   что угодно
@@ -46,7 +58,7 @@ export function Hero() {
               </h1>
 
               {/* Subtitle */}
-              <p className="text-lg text-gray-500 leading-relaxed mb-10 max-w-md">
+              <p className="text-lg text-gray-500 max-lg:text-white/80 leading-relaxed mb-10 max-w-md">
                 Инструменты, электроника, транспорт, спорт — тысячи вещей рядом
                 с вами. Экономьте до 90% вместо покупки.
               </p>
@@ -90,17 +102,19 @@ export function Hero() {
                     </div>
                   ))}
                 </div>
-                <span className="text-sm text-gray-500">
-                  <span className="font-semibold text-gray-700">15,000+</span>{" "}
+                <span className="text-sm text-gray-500 max-lg:text-white/80">
+                  <span className="font-semibold text-gray-700 max-lg:text-white">
+                    15,000+
+                  </span>{" "}
                   довольных пользователей
                 </span>
               </div>
             </div>
 
             {/* Right Column — Image Collage */}
-            <div className="relative w-full top-5 left-20 max-lg:left-0 block order-1 lg:order-2 h-[520px]">
+            <div className="relative top-5 left-20 hidden lg:block lg:order-2 h-[520px]">
               {/* Main tools image */}
-              <div className="absolute top-0 left-15 w-[65%] h-[65%] max-lg:top-0  max-lg:left-1/2 max-lg:-translate-x-1/2 max-lg:w-[90%] max-lg:h-[461px] rounded-3xl overflow-hidden shadow-lg">
+              <div className="absolute top-0 left-15 w-[65%] h-[65%] rounded-3xl overflow-hidden shadow-lg">
                 <Image
                   src="https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=600&h=400&fit=crop"
                   alt="Инструменты"
