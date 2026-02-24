@@ -100,7 +100,7 @@ export function Hero() {
             {/* Right Column — Image Collage */}
             <div className="relative w-full top-5 left-20 max-lg:left-0 block order-1 lg:order-2 h-[520px]">
               {/* Main tools image */}
-              <div className="absolute top-0 left-15 w-[65%] h-[65%] max-lg:top-0  max-lg:left-1/2 max-lg:-translate-x-1/2 max-lg:w-[80%] max-lg:h-[461px] rounded-3xl overflow-hidden shadow-lg">
+              <div className="absolute top-0 left-15 w-[65%] h-[65%] max-lg:top-0  max-lg:left-1/2 max-lg:-translate-x-1/2 max-lg:w-[90%] max-lg:h-[461px] rounded-3xl overflow-hidden shadow-lg">
                 <Image
                   src="https://images.unsplash.com/photo-1581783898377-1c85bf937427?w=600&h=400&fit=crop"
                   alt="Инструменты"
@@ -110,7 +110,7 @@ export function Hero() {
               </div>
 
               {/* Headphones image */}
-              <div className="absolute top-20 right-15 w-[38%] h-[40%] max-lg:top-10 max-lg:right-3 max-lg:w-[180px] max-lg:h-[180px] rounded-3xl overflow-hidden shadow-lg">
+              <div className="absolute top-20 right-15 w-[38%] h-[40%] max-lg:top-10 max-lg:right-3 max-lg:w-[170px] max-lg:h-[170px] rounded-3xl overflow-hidden shadow-lg">
                 <Image
                   src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&h=250&fit=crop"
                   alt="Наушники"
@@ -120,7 +120,7 @@ export function Hero() {
               </div>
 
               {/* Bicycles image */}
-              <div className="absolute bottom-15 left-0 w-[42%] h-[38%] max-lg:w-[170px] max-lg:h-[170px] max-lg:bottom-55 rounded-3xl overflow-hidden shadow-lg bg-gray-100">
+              <div className="absolute bottom-15 left-0 w-[42%] h-[38%] max-lg:w-[160px] max-lg:h-[160px] max-lg:bottom-55 rounded-3xl overflow-hidden shadow-lg bg-gray-100">
                 <Image
                   src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=300&h=250&fit=crop"
                   alt="Велосипеды"
