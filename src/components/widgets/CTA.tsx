@@ -5,14 +5,14 @@ export function CTA() {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-3xl overflow-hidden">
+        <div className="relative bg-gray-900 rounded-3xl overflow-hidden">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
             {/* Content */}
-            <div className="p-8 lg:p-12 text-dark-500">
+            <div className="p-8 lg:p-12 text-white">
               <h2 className="text-3xl sm:text-4xl font-bold mb-4">
                 Начните зарабатывать на своих вещах
               </h2>
-              <p className="text-lg text-dark-400 mb-8">
+              <p className="text-lg text-gray-300 mb-8">
                 Превратите редко используемые вещи в источник дохода. Размещение
                 объявления занимает всего 5 минут.
               </p>
@@ -20,28 +20,32 @@ export function CTA() {
                 <Button
                   variant="primary"
                   size="lg"
-                  className="bg-gray-900 text-white hover:bg-gray-800"
+                  className="bg-yellow-400 text-gray-900 hover:bg-yellow-500"
                 >
                   Разместить объявление
                 </Button>
-                <Button variant="secondary" size="lg">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="border-white text-white hover:bg-white hover:text-gray-900"
+                >
                   Узнать больше
                 </Button>
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-yellow-400">
+              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-gray-700">
                 <div>
-                  <div className="text-3xl font-bold mb-1">50K+</div>
-                  <div className="text-sm text-dark-400">Предметов</div>
+                  <div className="text-3xl font-bold text-white mb-1">50K+</div>
+                  <div className="text-sm text-gray-400">Предметов</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold mb-1">15K+</div>
-                  <div className="text-sm text-dark-400">Пользователей</div>
+                  <div className="text-3xl font-bold text-white mb-1">15K+</div>
+                  <div className="text-sm text-gray-400">Пользователей</div>
                 </div>
                 <div>
-                  <div className="text-3xl font-bold mb-1">4.8★</div>
-                  <div className="text-sm text-dark-400">Рейтинг</div>
+                  <div className="text-3xl font-bold text-white mb-1">4.8★</div>
+                  <div className="text-sm text-gray-400">Рейтинг</div>
                 </div>
               </div>
             </div>
