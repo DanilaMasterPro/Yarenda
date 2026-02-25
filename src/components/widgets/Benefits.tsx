@@ -47,10 +47,8 @@ export function Benefits() {
           {benefits.map((benefit) => {
             const Icon = benefit.icon;
             return (
-              <div
-                key={benefit.title}
-                className="fade-in bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-              >
+              <div key={benefit.title} className="fade-in">
+                <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div
                   className={`${benefit.color} w-14 h-14 rounded-xl flex items-center justify-center mb-4`}
                 >
@@ -60,6 +58,7 @@ export function Benefits() {
                   {benefit.title}
                 </h3>
                 <p className="text-gray-600">{benefit.description}</p>
+                </div>
               </div>
             );
           })}

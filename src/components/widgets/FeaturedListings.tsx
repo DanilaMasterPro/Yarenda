@@ -18,19 +18,20 @@ export function FeaturedListings() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredListings.map((listing) => (
-            <ProductCard
-              key={listing.id}
-              id={listing.id}
-              title={listing.title}
-              price={listing.price}
-              period={listing.period}
-              rating={listing.rating}
-              reviews={listing.reviews}
-              location={listing.location}
-              owner={listing.owner}
-              popular={listing.popular}
-              image={listing.image}
-            />
+            <div key={listing.id} className="fade-in">
+              <ProductCard
+                id={listing.id}
+                title={listing.title}
+                price={listing.price}
+                period={listing.period}
+                rating={listing.rating}
+                reviews={listing.reviews}
+                location={listing.location}
+                owner={listing.owner}
+                popular={listing.popular}
+                image={listing.image}
+              />
+            </div>
           ))}
         </div>
 
