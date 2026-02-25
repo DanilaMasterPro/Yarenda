@@ -1,21 +1,30 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext } from 'react';
-import { useGSAPAnimations } from '@/hooks';
+import React, { createContext, useContext } from "react";
+import { useGSAPAnimations } from "@/hooks";
+import { usePreloaderContext } from "./PreloaderProvider";
 
 interface GSAPAnimationsContextValue {
   refreshScrollTrigger: () => void;
   resetAnimations: () => void;
 }
 
-const GSAPAnimationsContext = createContext<GSAPAnimationsContextValue | undefined>(undefined);
+const GSAPAnimationsContext = createContext<
+  GSAPAnimationsContextValue | undefined
+>(undefined);
 
 interface GSAPAnimationsProviderProps {
   children: React.ReactNode;
 }
 
-export const GSAPAnimationsProvider: React.FC<GSAPAnimationsProviderProps> = ({ children }) => {
-  const { refreshScrollTrigger, resetAnimations } = useGSAPAnimations();
+export const GSAPAnimationsProvider: React.FC<GSAPAnimationsProviderProps> = ({
+  children,
+}) => {
+  const { isPreloaderComplete } = usePreloaderContext();
+  const { refreshScrollTrigger, resetAnimations } = useGSAPAnimations({
+    waitForPreloader: true,
+    isPreloaderComplete,
+  });
 
   const value: GSAPAnimationsContextValue = {
     refreshScrollTrigger,
@@ -31,10 +40,12 @@ export const GSAPAnimationsProvider: React.FC<GSAPAnimationsProviderProps> = ({ 
 
 export const useGSAPAnimationsContext = (): GSAPAnimationsContextValue => {
   const context = useContext(GSAPAnimationsContext);
-  
+
   if (!context) {
-    throw new Error('useGSAPAnimationsContext must be used within a GSAPAnimationsProvider');
+    throw new Error(
+      "useGSAPAnimationsContext must be used within a GSAPAnimationsProvider",
+    );
   }
-  
+
   return context;
 };

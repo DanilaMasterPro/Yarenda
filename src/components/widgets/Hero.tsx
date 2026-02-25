@@ -37,7 +37,7 @@ export function Hero() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div className="max-w-2xl relative z-10">
               {/* Badge */}
-              <div className="fade-in inline-flex items-center gap-2 bg-white/15 border border-white/30 rounded-full px-4 py-2 mb-8 shadow-sm">
+              <div className="fade-in-hero inline-flex items-center gap-2 bg-white/15 border border-white/30 rounded-full px-4 py-2 mb-8 shadow-sm">
                 <span className="text-lg">✨</span>
                 <span className="text-sm font-medium text-white">
                   №1 платформа аренды в России
@@ -45,7 +45,7 @@ export function Hero() {
               </div>
 
               {/* Heading */}
-              <h1 className="fade-in text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-white leading-tight mb-6">
+              <h1 className="fade-in-hero text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-white leading-tight mb-6">
                 Арендуй{" "}
                 <span className="relative inline-block">
                   что угодно
@@ -66,13 +66,13 @@ export function Hero() {
               </h1>
 
               {/* Subtitle */}
-              <p className="fade-in text-lg text-white/80 leading-relaxed mb-10 max-w-md">
+              <p className="fade-in-hero text-lg text-white/80 leading-relaxed mb-10 max-w-md">
                 Инструменты, электроника, транспорт, спорт — тысячи вещей рядом
                 с вами. Экономьте до 90% вместо покупки.
               </p>
 
               {/* Search Bar */}
-              <div className="fade-in bg-white rounded-full shadow-lg border border-gray-100 p-1.5 flex items-center gap-1 mb-8 max-w-lg">
+              <div className="fade-in-hero bg-white rounded-full shadow-lg border border-gray-100 p-1.5 flex items-center gap-1 mb-8 max-w-lg">
                 <div className="flex items-center gap-2 flex-1 pl-4">
                   <Search className="h-4 w-4 text-gray-400 shrink-0" />
                   <input
@@ -98,7 +98,7 @@ export function Hero() {
               </div>
 
               {/* Users Strip */}
-              <div className="fade-in flex items-center gap-3">
+              <div className="fade-in-hero flex items-center gap-3">
                 <div className="flex -space-x-2">
                   {["А", "Д", "И", "С"].map((letter, i) => (
                     <div
