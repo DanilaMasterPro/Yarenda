@@ -18,8 +18,10 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
           {/* Logo & Description */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1">
-            <div className="text-2xl font-bold text-white mb-4">Яренда</div>
-            <p className="text-sm text-gray-400 mb-4">
+            <div className="fade-in text-2xl font-bold text-white mb-4">
+              Яренда
+            </div>
+            <p className="fade-in text-sm text-gray-400 mb-4">
               Платформа совместного потребления для аренды вещей у соседей
             </p>
           </div>
@@ -27,13 +29,15 @@ export function Footer() {
           {/* Links */}
           {Object.values(footerLinks).map((section) => (
             <div key={section.title}>
-              <h3 className="font-semibold text-white mb-4">{section.title}</h3>
+              <h3 className="fade-in font-semibold text-white mb-4">
+                {section.title}
+              </h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link}>
                     <a
                       href="#"
-                      className="text-sm hover:text-gray-300 transition-colors"
+                      className="fade-in text-sm hover:text-gray-300 transition-colors"
                     >
                       {link}
                     </a>
@@ -44,7 +48,7 @@ export function Footer() {
           ))}
 
           {/* Support Button */}
-          <div className="col-span-2 md:col-span-2 lg:col-span-2 flex md:justify-end items-start">
+          <div className="fade-in col-span-2 md:col-span-2 lg:col-span-2 flex md:justify-end items-start">
             <Button variant="primary">Поддержка</Button>
           </div>
         </div>
@@ -52,10 +56,10 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-gray-400">
+            <p className="fade-in text-sm text-gray-400">
               © 2026 Яренда. Все права защищены.
             </p>
-            <div className="flex gap-6 text-sm">
+            <div className="fade-inflex gap-6 text-sm">
               <a href="#" className="hover:text-gray-100 transition-colors">
                 Условия использования
               </a>

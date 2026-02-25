@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/index.css";
+import { GSAPAnimationsProvider } from "@/providers";
 
 export const metadata: Metadata = {
   title: "Яренда — аренда вещей у соседей",
@@ -14,7 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body>{children}</body>
+      <body>
+        <GSAPAnimationsProvider>{children}</GSAPAnimationsProvider>
+      </body>
     </html>
   );
 }

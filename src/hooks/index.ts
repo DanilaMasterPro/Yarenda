@@ -1,0 +1,1 @@
+export { useGSAPAnimations } from './useGSAPAnimations';

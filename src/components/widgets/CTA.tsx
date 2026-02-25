@@ -6,17 +6,17 @@ export function CTA() {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative bg-gray-900 rounded-3xl overflow-hidden">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
+          <div className="fade-in grid lg:grid-cols-2 gap-8 items-center">
             {/* Content */}
             <div className="p-8 lg:p-12 text-white order-2 lg:order-1">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <h2 className="fade-intext-3xl sm:text-4xl font-bold mb-4">
                 Начните зарабатывать на своих вещах
               </h2>
-              <p className="text-lg text-gray-300 mb-8">
+              <p className="fade-in text-lg text-gray-300 mb-8">
                 Превратите редко используемые вещи в источник дохода. Размещение
                 объявления занимает всего 5 минут.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="fade-in flex flex-col sm:flex-row gap-4">
                 <Button
                   variant="primary"
                   size="lg"
@@ -34,7 +34,7 @@ export function CTA() {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-gray-700">
+              <div className="fade-in grid grid-cols-3 gap-6 mt-12 pt-8 border-t border-gray-700">
                 <div>
                   <div className="text-3xl font-bold text-white mb-1">50K+</div>
                   <div className="text-sm text-gray-400">Предметов</div>

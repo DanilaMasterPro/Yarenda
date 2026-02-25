@@ -31,12 +31,12 @@ export function CategoryCard({
   return (
     <div className="space-y-4">
       {/* Category Header */}
-      <div className="flex items-center">
+      <div className="fade-in flex items-center">
         <Link
           href={`/catalog?category=${category.slug}`}
           className="flex items-center gap-1 group cursor-pointer"
         >
-          <h2 className="text-xl font-bold text-gray-900">{category.title}</h2>
+          <h2 className=" text-xl font-bold text-gray-900">{category.title}</h2>
           <ChevronRight className="w-5 h-5 relative left-1 top-[2px] text-gray-400 transition-transform duration-200 group-hover:translate-x-[5px]" />
         </Link>
       </div>
@@ -49,7 +49,7 @@ export function CategoryCard({
             <Link
               key={subcategory.name}
               href={`/catalog?subcategory=${subcategory.name}`}
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+              className="fade-in flex items-center gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
             >
               {/* Icon */}
               <div

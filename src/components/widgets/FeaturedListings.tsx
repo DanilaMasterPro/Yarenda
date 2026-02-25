@@ -8,10 +8,10 @@ export function FeaturedListings() {
     <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="fade-in text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             Популярные предложения
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="fade-in text-lg text-gray-600">
             Проверенные предметы от надежных арендодтелей
           </p>
         </div>
@@ -34,7 +34,7 @@ export function FeaturedListings() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="fade-in text-center mt-12">
           <Button asChild variant="outline" size="lg">
             <Link href="/catalog">Показать больше</Link>
           </Button>

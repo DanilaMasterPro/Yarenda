@@ -34,7 +34,7 @@ export function ProductCard({
   return (
     <Link
       href={`/product/${id}`}
-      className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 "
+      className="fade-in group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 "
     >
       {/* Image */}
       <div className="relative aspect-[4/3] overflow-hidden">

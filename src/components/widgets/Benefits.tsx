@@ -4,19 +4,22 @@ const benefits = [
   {
     icon: DollarSign,
     title: "Экономьте деньги",
-    description: "Платите только за время использования вместо покупки дорогих вещей",
+    description:
+      "Платите только за время использования вместо покупки дорогих вещей",
     color: "bg-orange-100 text-orange-600",
   },
   {
     icon: Leaf,
     title: "Берегите природу",
-    description: "Совместное потребление снижает производство и сохраняет ресурсы планеты",
+    description:
+      "Совместное потребление снижает производство и сохраняет ресурсы планеты",
     color: "bg-green-100 text-green-600",
   },
   {
     icon: Wallet,
     title: "Создавайте сообщество",
-    description: "Зарабатывайте на вещах, которые редко используете, и познакомьтесь с соседями",
+    description:
+      "Зарабатывайте на вещах, которые редко используете, и познакомьтесь с соседями",
     color: "bg-yellow-100 text-yellow-600",
   },
   {
@@ -32,10 +35,10 @@ export function Benefits() {
     <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="fade-in text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
             Почему Яренда?
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="fade-in text-lg text-gray-600">
             Современный подход к владению вещами
           </p>
         </div>
@@ -46,17 +49,17 @@ export function Benefits() {
             return (
               <div
                 key={benefit.title}
-                className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                className="fade-in bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
-                <div className={`${benefit.color} w-14 h-14 rounded-xl flex items-center justify-center mb-4`}>
+                <div
+                  className={`${benefit.color} w-14 h-14 rounded-xl flex items-center justify-center mb-4`}
+                >
                   <Icon className="w-7 h-7" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   {benefit.title}
                 </h3>
-                <p className="text-gray-600">
-                  {benefit.description}
-                </p>
+                <p className="text-gray-600">{benefit.description}</p>
               </div>
             );
           })}
