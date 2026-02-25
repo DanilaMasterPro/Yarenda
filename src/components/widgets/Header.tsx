@@ -6,11 +6,14 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import { AuthModal } from "../modals/AuthModal";
 import { LocationModal } from "../modals/LocationModal";
+import { MobileMenu } from "./MobileMenu";
+import { SearchBar } from "./SearchBar";
 import Link from "next/link";
 
 export function Header() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
     <>
@@ -27,29 +30,7 @@ export function Header() {
 
             {/* Search Bar */}
             <div className="hidden md:flex flex-1 max-w-2xl">
-              <div className="w-full flex items-center bg-gray-50 rounded-full border border-gray-200 hover:shadow-md transition-shadow">
-                <button
-                  onClick={() => setShowLocationModal(true)}
-                  className="flex items-center gap-2 px-6 py-3 border-r border-gray-200 hover:bg-gray-100 rounded-l-full transition-colors"
-                >
-                  <MapPin className="w-4 h-4 text-gray-600" />
-                  <span className="text-sm text-gray-700 font-medium">
-                    Где?
-                  </span>
-                </button>
-                <Input
-                  type="text"
-                  placeholder="Что вы ищете?"
-                  className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-sm px-6"
-                />
-                <Button
-                  size="icon"
-                  variant="primary"
-                  className="rounded-full m-1.5 h-10 w-10"
-                >
-                  <Search className="h-5 w-5" />
-                </Button>
-              </div>
+              <SearchBar onLocationClick={() => setShowLocationModal(true)} />
             </div>
 
             {/* Desktop Navigation */}
@@ -69,21 +50,35 @@ export function Header() {
             </nav>
 
             {/* Right Actions */}
-            <div className="flex items-center space-x-3 flex-shrink-0">
-              <Button variant="ghost" size="icon" className="hidden sm:flex">
+            <div className="flex items-center md:space-x-3 flex-shrink-0">
+              <Button
+                onClick={() => setShowLocationModal(true)}
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+              >
+                <Search className="h-5 w-5" />
+              </Button>
+              <Button variant="ghost" size="icon" className="flex">
                 <Heart className="h-5 w-5" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowAuthModal(true)}
+                className="hidden lg:flex"
               >
                 <User className="h-5 w-5" />
               </Button>
               <Button variant="primary" className="hidden lg:flex">
                 Разместить объявление
               </Button>
-              <Button variant="ghost" size="icon" className="md:hidden">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setShowMobileMenu(true)}
+              >
                 <Menu className="h-6 w-6" />
               </Button>
             </div>
@@ -96,6 +91,11 @@ export function Header() {
       <LocationModal
         open={showLocationModal}
         onOpenChange={setShowLocationModal}
+      />
+      <MobileMenu
+        open={showMobileMenu}
+        onOpenChange={setShowMobileMenu}
+        onAuthClick={() => setShowAuthModal(true)}
       />
     </>
   );
