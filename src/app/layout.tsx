@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body>
+      <body className="bg-gray-900">
         <GSAPAnimationsProvider>{children}</GSAPAnimationsProvider>
       </body>
     </html>
