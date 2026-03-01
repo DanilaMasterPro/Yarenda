@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Star, MapPin } from "lucide-react";
+import { Heart, MapPin } from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { ImageWithFallback } from "../ui/ImageWithFallback";
@@ -65,7 +65,7 @@ export function ProductCard({
 
         <div className="flex items-center gap-2 mb-3 relative">
           <div className="flex items-center">
-            <Star className="w-4 h-4 text-orange-400 fill-orange-400" />
+            <Heart className="w-4 h-4 text-red-500 fill-red-500" />
             <span className="ml-1 text-sm font-medium text-gray-900">
               {rating}
             </span>

@@ -21,6 +21,7 @@ import { Header } from "@/components/widgets/Header";
 import { Footer } from "@/components/widgets/Footer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ProductCard } from "@/components/widgets/ProductCard";
+import { OwnerCard } from "@/components/widgets/OwnerCard";
 
 const productDetails = [
   {
@@ -204,47 +205,12 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Owner Card */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
-              <div className="flex items-center gap-4 mb-4">
-                <Avatar className="w-16 h-16">
-                  <AvatarFallback className="bg-yellow-100 text-yellow-600 text-xl">
-                    {productData.owner.name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="font-semibold text-lg">
-                    Владелец: {productData.owner.name}
-                  </h3>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-orange-400 fill-orange-400 mr-1" />
-                      <span className="font-medium">
-                        {productData.owner.rating}
-                      </span>
-                    </div>
-                    <span>•</span>
-                    <span>На сайте с {productData.owner.joinedDate}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Features */}
-              <div className="space-y-3 mb-4">
-                {productData.features.map((feature, index) => {
-                  const Icon = feature.icon;
-                  return (
-                    <div key={index} className="flex items-center gap-3">
-                      <Icon className="w-5 h-5 text-yellow-600" />
-                      <span className="text-gray-700">{feature.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <Button variant="secondary" className="w-full mb-4">
-                Отправить сообщение
-              </Button>
-            </div>
+            <OwnerCard
+              name={productData.owner.name}
+              rating={productData.owner.rating}
+              joinedDate={productData.owner.joinedDate}
+              features={productData.features}
+            />
 
             {/* Description */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
