@@ -13,10 +13,10 @@ export default function HomePage() {
       <Header />
       <main>
         <Hero />
-
-        <HowItWorks />
-        <Categories />
+        <Categories backgroundVariant="gradient" />
         <FeaturedListings />
+        <HowItWorks />
+
         <Benefits />
         <CTA />
       </main>

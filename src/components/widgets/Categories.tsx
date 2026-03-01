@@ -3,12 +3,21 @@ import { CategoryCard } from "./CategoryCard";
 import { allCategories } from "../../data/categories";
 import { Button } from "../ui/button";
 
-export function Categories() {
+interface CategoriesProps {
+  backgroundVariant?: "solid" | "gradient";
+}
+
+export function Categories({ backgroundVariant = "solid" }: CategoriesProps) {
   // Показываем только первые 3 категории на главной странице
   const displayedCategories = allCategories.slice(0, 3);
 
+  const backgroundClass = 
+    backgroundVariant === "gradient"
+      ? "bg-gradient-to-t from-gray-50 to-transparent"
+      : "bg-gray-50";
+
   return (
-    <section className="py-16 bg-gray-50">
+    <section className={`py-16 ${backgroundClass}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="fade-in text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
