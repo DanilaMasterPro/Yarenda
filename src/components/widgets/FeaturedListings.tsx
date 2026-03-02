@@ -32,10 +32,7 @@ export function FeaturedListings() {
             spaceBetween={24}
             slidesPerView={1.2}
             navigation={false}
-            pagination={{ 
-              clickable: true,
-              el: '.swiper-custom-pagination'
-            }}
+            pagination={false}
             breakpoints={{
               640: {
                 slidesPerView: 2,
@@ -60,7 +57,7 @@ export function FeaturedListings() {
               </SwiperSlide>
             ))}
           </Swiper>
-          <div className="swiper-custom-pagination mt-6 flex justify-center"></div>
+          {/* <div className="swiper-custom-pagination mt-6 flex justify-center"></div> */}
         </div>
 
         {/* Desktop Grid - visible at lg breakpoint and above (>= 1024px) */}
