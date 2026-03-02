@@ -40,7 +40,7 @@ export function Hero() {
               <div className="fade-in-hero inline-flex items-center gap-2 bg-white/15 border border-white/30 rounded-full px-4 py-2 mb-8 shadow-sm">
                 <span className="text-lg">✨</span>
                 <span className="text-sm font-medium text-white">
-                  №1 платформа аренды в России
+                  №1 платформа аренды
                 </span>
               </div>
 

@@ -3,9 +3,9 @@ import "@/styles/index.css";
 import { ClientLayout } from "@/components/ClientLayout";
 
 export const metadata: Metadata = {
-  title: "Яренда — аренда вещей у соседей",
+  title: "Яренда — аренда вещей",
   description:
-    "Платформа для аренды вещей у соседей. Экономьте деньги — арендуйте вместо покупки.",
+    "Платформа для аренды вещей. Экономьте деньги — арендуйте вместо покупки.",
 };
 
 export default function RootLayout({
