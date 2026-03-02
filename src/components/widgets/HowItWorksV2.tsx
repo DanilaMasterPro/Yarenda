@@ -55,7 +55,7 @@ export function HowItWorksV2() {
                 <div
                   className={`flex-shrink-0 w-14 h-14 ${step.bgColor} rounded-full flex items-center justify-center`}
                 >
-                  <span className="text-[22px] font-bold text-gray-900">
+                  <span className="text-[20px] font-bold text-gray-900">
                     {step.number}
                   </span>
                 </div>
