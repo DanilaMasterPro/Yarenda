@@ -2,7 +2,7 @@ import { Header } from "@/components/widgets/Header";
 import { Hero } from "@/components/widgets/Hero";
 import { Categories } from "@/components/widgets/Categories";
 import { FeaturedListings } from "@/components/widgets/FeaturedListings";
-import { HowItWorks } from "@/components/widgets/HowItWorks";
+import { HowItWorksV2 } from "@/components/widgets/HowItWorksV2";
 import { Benefits } from "@/components/widgets/Benefits";
 import { CTA } from "@/components/widgets/CTA";
 import { Footer } from "@/components/widgets/Footer";
@@ -15,7 +15,7 @@ export default function HomePage() {
         <Hero />
         <Categories backgroundVariant="gradient" />
         <FeaturedListings />
-        <HowItWorks />
+        <HowItWorksV2 />
 
         <Benefits />
         <CTA />
