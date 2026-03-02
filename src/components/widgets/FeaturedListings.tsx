@@ -1,7 +1,16 @@
+"use client";
+
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { ProductCard } from "./ProductCard";
 import { featuredListings } from "@/data/products.data";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "@/styles/swiper.css";
 
 export function FeaturedListings() {
   return (
@@ -16,7 +25,46 @@ export function FeaturedListings() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Mobile Slider - visible below lg breakpoint (< 1024px) */}
+        <div className="lg:hidden">
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={24}
+            slidesPerView={1.2}
+            navigation={false}
+            pagination={{ 
+              clickable: true,
+              el: '.swiper-custom-pagination'
+            }}
+            breakpoints={{
+              640: {
+                slidesPerView: 2,
+                spaceBetween: 24,
+              },
+            }}
+          >
+            {featuredListings.map((listing) => (
+              <SwiperSlide key={listing.id}>
+                <ProductCard
+                  id={listing.id}
+                  title={listing.title}
+                  price={listing.price}
+                  period={listing.period}
+                  rating={listing.rating}
+                  reviews={listing.reviews}
+                  location={listing.location}
+                  owner={listing.owner}
+                  popular={listing.popular}
+                  image={listing.image}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <div className="swiper-custom-pagination mt-6 flex justify-center"></div>
+        </div>
+
+        {/* Desktop Grid - visible at lg breakpoint and above (>= 1024px) */}
+        <div className="hidden lg:grid grid-cols-3 gap-6">
           {featuredListings.map((listing) => (
             <div key={listing.id} className="fade-in">
               <ProductCard
