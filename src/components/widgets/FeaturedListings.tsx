@@ -3,7 +3,7 @@
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { ProductCard } from "./ProductCard";
-import { featuredListings } from "@/data/products.data";
+import { featuredListings } from "@/shared/data/products.data";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 

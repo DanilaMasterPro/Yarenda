@@ -4,7 +4,7 @@ import * as React from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { SlideInModal } from "@/components/ui/SlideInModal";
-import { CatalogFilter } from "@/data/filters.data";
+import { CatalogFilter } from "@/shared/data/filters.data";
 
 interface CatalogFiltersProps {
   filters: CatalogFilter[];

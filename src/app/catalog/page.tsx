@@ -11,8 +11,8 @@ import { Header } from "@/components/widgets/Header";
 import { Footer } from "@/components/widgets/Footer";
 import { ProductCard } from "@/components/widgets/ProductCard";
 import { CatalogFilters } from "@/components/widgets/CatalogFilters";
-import { catalogProducts } from "@/data/products.data";
-import { catalogFilters } from "@/data/filters.data";
+import { catalogProducts } from "@/shared/data/products.data";
+import { catalogFilters } from "@/shared/data/filters.data";
 
 export default function CatalogPage() {
   const [showFilters, setShowFilters] = useState(false);

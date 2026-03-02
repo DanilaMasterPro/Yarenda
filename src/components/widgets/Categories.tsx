@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CategoryCard } from "./CategoryCard";
-import { allCategories } from "../../data/categories";
+import { allCategories } from "@/shared/data/categories";
 import { Button } from "../ui/button";
 
 interface CategoriesProps {
@@ -11,7 +11,7 @@ export function Categories({ backgroundVariant = "solid" }: CategoriesProps) {
   // Показываем только первые 3 категории на главной странице
   const displayedCategories = allCategories.slice(0, 3);
 
-  const backgroundClass = 
+  const backgroundClass =
     backgroundVariant === "gradient"
       ? "bg-gradient-to-t from-gray-50 to-transparent"
       : "bg-gray-50";

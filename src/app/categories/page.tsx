@@ -5,7 +5,7 @@ import { PageTitle } from "@/components/ui/PageTitle";
 import { Header } from "@/components/widgets/Header";
 import { Footer } from "@/components/widgets/Footer";
 import { CategoryCard } from "@/components/widgets/CategoryCard";
-import { allCategories } from "@/data/categories";
+import { allCategories } from "@/shared/data/categories";
 
 export default function CategoriesPage() {
   return (
@@ -14,11 +14,7 @@ export default function CategoriesPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb */}
-        <Breadcrumbs
-          items={[
-            { label: "Все категории" },
-          ]}
-        />
+        <Breadcrumbs items={[{ label: "Все категории" }]} />
 
         <PageTitle title="Все категории" />
 
