@@ -22,6 +22,7 @@ if (!i18n.isInitialized) {
     defaultNS,
     resources,
     interpolation: { escapeValue: false },
+    initImmediate: false, // force synchronous init so keys resolve on first render
   });
 }
 

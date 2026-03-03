@@ -28,7 +28,15 @@
     "featured": "Популярные объявления",
     "categories": "Категории",
     "showAsList": "Показать списком",
-    "showOnMap": "Показать на карте"
+    "showOnMap": "Показать на карте",
+    "filters": "Фильтры",
+    "sort": "Сортировка",
+    "foundCount": "Найдено {{count}} предложений",
+    "loadMore": "Показать больше",
+    "sortDefault": "По умолчанию",
+    "sortCheap": "Дешевле",
+    "sortExpensive": "Дороже",
+    "sortDate": "По дате"
   },
   "search": {
     "title": "Поиск",

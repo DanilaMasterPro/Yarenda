@@ -28,7 +28,15 @@
     "featured": "Featured listings",
     "categories": "Categories",
     "showAsList": "Show as list",
-    "showOnMap": "Show on map"
+    "showOnMap": "Show on map",
+    "filters": "Filters",
+    "sort": "Sort",
+    "foundCount": "Found {{count}} listings",
+    "loadMore": "Load more",
+    "sortDefault": "Default",
+    "sortCheap": "Cheapest first",
+    "sortExpensive": "Most expensive first",
+    "sortDate": "By date"
   },
   "search": {
     "title": "Search",
