@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { List } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import { BottomSheet } from "../ui/BottomSheet";
 import type { ProductCard } from "@/shared/data/products.data";
@@ -68,6 +69,7 @@ export function CatalogMapView({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
   // Selected products for a point (can be multiple at same coords)
   const [selectedProducts, setSelectedProducts] = useState<ProductCard[]>([]);
@@ -227,7 +229,7 @@ export function CatalogMapView({
             className="bg-white shadow-xl rounded-full px-6 gap-2"
           >
             <List className="w-5 h-5" />
-            Показать списком
+            {t("catalog.showAsList")}
           </Button>
         </div>
       </div>
@@ -268,7 +270,7 @@ export function CatalogMapView({
             className="shadow-xl rounded-full px-6 gap-2"
           >
             <List className="w-5 h-5" />
-            Показать списком
+            {t("catalog.showAsList")}
           </Button>
         </div>
       )}

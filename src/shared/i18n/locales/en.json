@@ -26,7 +26,9 @@
   },
   "catalog": {
     "featured": "Featured listings",
-    "categories": "Categories"
+    "categories": "Categories",
+    "showAsList": "Show as list",
+    "showOnMap": "Show on map"
   },
   "search": {
     "title": "Search",
