@@ -116,11 +116,22 @@ export function CatalogClient() {
                     onClick={() => setSortOpen((o) => !o)}
                     className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
                   >
-                    <svg className="w-4 h-4 text-gray-500" viewBox="0 0 16 16" fill="none">
-                      <path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <svg
+                      className="w-4 h-4 text-gray-500"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                    >
+                      <path
+                        d="M2 4h12M4 8h8M6 12h4"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
                     </svg>
                     {t("catalog.sort")}
-                    <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${sortOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown
+                      className={`w-4 h-4 text-gray-500 transition-transform ${sortOpen ? "rotate-180" : ""}`}
+                    />
                   </button>
 
                   {sortOpen && (

@@ -10,12 +10,14 @@ interface CatalogFiltersProps {
   filters: CatalogFilter[];
   mobileOpen: boolean;
   onMobileOpenChange: (open: boolean) => void;
+  variant?: "sidebar" | "inline";
 }
 
 export function CatalogFilters({
   filters,
   mobileOpen,
   onMobileOpenChange,
+  variant = "sidebar",
 }: CatalogFiltersProps) {
   // Shared filter content
   const FilterContent = () => (
@@ -66,8 +68,21 @@ export function CatalogFilters({
 
   return (
     <>
+      {/* Inline variant — no container, used inside panels */}
+      {variant === "inline" && (
+        <div className="flex flex-col h-full">
+          <div className="flex-1 overflow-y-auto">
+            <FilterContent />
+          </div>
+          <div className="border-t pt-4 mt-4 space-y-3">
+            <CatalogButtons />
+          </div>
+        </div>
+      )}
+
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-80 flex-shrink-0">
+      {variant === "sidebar" && (
+        <aside className="hidden lg:block w-80 flex-shrink-0">
         <div className="bg-white rounded-lg shadow-sm sticky top-24 max-h-[calc(100vh-7rem)] flex flex-col">
           <div className="p-6 overflow-y-auto flex-1">
             <FilterContent />
@@ -76,7 +91,8 @@ export function CatalogFilters({
             <CatalogButtons />
           </div>
         </div>
-      </aside>
+        </aside>
+      )}
 
       {/* Mobile Modal */}
       <SlideInModal

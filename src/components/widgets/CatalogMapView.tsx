@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { List } from "lucide-react";
+import { List, ArrowLeft, SlidersHorizontal, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { BottomSheet } from "../ui/BottomSheet";
+import { CatalogFilters } from "./CatalogFilters";
 import type { ProductCard } from "@/shared/data/products.data";
+import { catalogFilters } from "@/shared/data/filters.data";
 import { MapProductCard } from "./MapProductCard";
 
 const DEFAULT_CENTER: [number, number] = [55.7558, 37.6173];
@@ -87,6 +89,9 @@ export function CatalogMapView({
 
   // Mobile bottom‑sheet state
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  // Desktop sidebar filters panel
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   // ── URL helpers ─────────────────────────────────────
 
@@ -233,22 +238,33 @@ export function CatalogMapView({
   return (
     <div className="relative w-full h-full flex">
       {/* ── Desktop sidebar (left panel with product list) ── */}
-      <div className="hidden lg:flex flex-col w-[420px] border-r border-gray-200 bg-white h-full overflow-hidden">
+      <div className="hidden lg:flex flex-col w-[420px] border-r border-gray-200 bg-white h-full overflow-hidden relative">
         {/* Header */}
-        <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
-          <p className="text-sm font-medium text-gray-900">
+        <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-2 flex-shrink-0">
+          {/* Back arrow — only when a pin is selected */}
+          {selectedProducts.length > 0 && (
+            <button
+              onClick={clearPoint}
+              className="p-1 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+            >
+              <ArrowLeft className="w-4 h-4 text-gray-500" />
+            </button>
+          )}
+
+          <p className="text-sm font-medium text-gray-900 flex-1 min-w-0 truncate">
             {selectedProducts.length > 0
               ? `${selectedProducts.length} объявлени${selectedProducts.length === 1 ? "е" : selectedProducts.length < 5 ? "я" : "й"}`
               : `Найдено ${products.length} предложений`}
           </p>
-          {selectedProducts.length > 0 && (
-            <button
-              onClick={clearPoint}
-              className="text-xs text-blue-500 hover:underline"
-            >
-              Показать все
-            </button>
-          )}
+
+          {/* Filters button */}
+          <button
+            onClick={() => setFiltersOpen(true)}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-900 transition-colors flex-shrink-0 ml-auto"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            {t("catalog.filters")}
+          </button>
         </div>
 
         {/* Scrollable list */}
@@ -259,6 +275,31 @@ export function CatalogMapView({
             ),
           )}
         </div>
+
+        {/* ── Filters overlay panel ── */}
+        {filtersOpen && (
+          <div className="absolute inset-0 bg-white flex flex-col z-10">
+            {/* Panel header */}
+            <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+              <p className="text-sm font-semibold text-gray-900">{t("catalog.filters")}</p>
+              <button
+                onClick={() => setFiltersOpen(false)}
+                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+            {/* Filters content */}
+            <div className="flex-1 min-h-0 px-4 py-4">
+              <CatalogFilters
+                filters={catalogFilters}
+                mobileOpen={false}
+                onMobileOpenChange={() => {}}
+                variant="inline"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ── Map ── */}
