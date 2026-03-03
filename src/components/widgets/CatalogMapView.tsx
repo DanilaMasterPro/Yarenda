@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { List } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { BottomSheet } from "../ui/BottomSheet";
 import type { ProductCard } from "@/shared/data/products.data";
@@ -70,12 +71,36 @@ export function CatalogMapView({
   const mapInstanceRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  // Stable refs so Yandex Maps event closures always see the latest values
+  const routerRef = useRef(router);
+  const searchParamsRef = useRef(searchParams);
+  useEffect(() => {
+    routerRef.current = router;
+    searchParamsRef.current = searchParams;
+  });
 
   // Selected products for a point (can be multiple at same coords)
   const [selectedProducts, setSelectedProducts] = useState<ProductCard[]>([]);
 
   // Mobile bottom‑sheet state
   const [sheetOpen, setSheetOpen] = useState(false);
+
+  // ── URL helpers ─────────────────────────────────────
+
+  const clearPoint = useCallback(() => {
+    setSelectedProducts([]);
+    const params = new URLSearchParams(searchParamsRef.current.toString());
+    params.delete("point");
+    routerRef.current.replace(`?${params.toString()}`, { scroll: false });
+  }, []);
+
+  const closeSheet = useCallback(() => {
+    setSheetOpen(false);
+    clearPoint();
+  }, [clearPoint]);
 
   // ── Map init ───────────────────────────────────────
 
@@ -86,9 +111,21 @@ export function CatalogMapView({
 
       const ymaps = window.ymaps;
 
+      // Snapshot URL params before any async work
+      const latParam = searchParamsRef.current.get("lat");
+      const lngParam = searchParamsRef.current.get("lng");
+      const zoomParam = searchParamsRef.current.get("zoom");
+      const pointParam = searchParamsRef.current.get("point");
+
+      const initialCenter: [number, number] =
+        latParam && lngParam
+          ? [parseFloat(latParam), parseFloat(lngParam)]
+          : DEFAULT_CENTER;
+      const initialZoom = zoomParam ? parseInt(zoomParam) : DEFAULT_ZOOM;
+
       const map = new ymaps.Map(mapContainerRef.current, {
-        center: DEFAULT_CENTER,
-        zoom: DEFAULT_ZOOM,
+        center: initialCenter,
+        zoom: initialZoom,
         controls: ["zoomControl", "geolocationControl"],
       });
 
@@ -122,7 +159,7 @@ export function CatalogMapView({
 
       const placemarks: any[] = [];
 
-      groups.forEach(({ coords, items }) => {
+      groups.forEach(({ coords, items }, key) => {
         const label =
           items.length > 1
             ? `${items.length} от ${Math.min(...items.map((i) => Number(i.price)))}₽`
@@ -141,6 +178,17 @@ export function CatalogMapView({
         placemark.events.add("click", () => {
           setSelectedProducts(items);
           setSheetOpen(true);
+          // Capture current map state and write to URL
+          const center = mapInstanceRef.current?.getCenter() ?? DEFAULT_CENTER;
+          const zoom = mapInstanceRef.current?.getZoom() ?? DEFAULT_ZOOM;
+          const params = new URLSearchParams(
+            searchParamsRef.current.toString(),
+          );
+          params.set("zoom", String(Math.round(zoom)));
+          params.set("lat", (center[0] as number).toFixed(4));
+          params.set("lng", (center[1] as number).toFixed(4));
+          params.set("point", key);
+          routerRef.current.replace(`?${params.toString()}`, { scroll: false });
         });
 
         placemarks.push(placemark);
@@ -149,11 +197,18 @@ export function CatalogMapView({
       clusterer.add(placemarks);
       map.geoObjects.add(clusterer);
 
-      if (placemarks.length > 1) {
+      // Only auto-fit bounds on first load — skip when restoring a saved position
+      if (placemarks.length > 1 && !latParam) {
         map.setBounds(clusterer.getBounds(), {
           checkZoomRange: true,
           zoomMargin: 40,
         });
+      }
+
+      // Restore active point from URL (page reload / back-navigation)
+      if (pointParam && groups.has(pointParam)) {
+        setSelectedProducts(groups.get(pointParam)!.items);
+        setSheetOpen(true);
       }
 
       setIsLoading(false);
@@ -188,7 +243,7 @@ export function CatalogMapView({
           </p>
           {selectedProducts.length > 0 && (
             <button
-              onClick={() => setSelectedProducts([])}
+              onClick={clearPoint}
               className="text-xs text-blue-500 hover:underline"
             >
               Показать все
@@ -238,10 +293,7 @@ export function CatalogMapView({
       <div className="lg:hidden">
         <BottomSheet
           isOpen={sheetOpen && selectedProducts.length > 0}
-          onClose={() => {
-            setSheetOpen(false);
-            setSelectedProducts([]);
-          }}
+          onClose={closeSheet}
           title={
             selectedProducts.length > 0
               ? `${selectedProducts.length} ${
