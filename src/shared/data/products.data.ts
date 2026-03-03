@@ -133,7 +133,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 145,
     owner: "Дмитрий К.",
     popular: false,
-    coords: [55.7560, 37.6176], // same building as #1
+    coords: [55.756, 37.6176], // same building as #1
     image:
       "https://images.unsplash.com/photo-1770386582823-3a7094e35b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3NjaCUyMGhhbW1lciUyMGRyaWxsJTIwY2FzZXxlbnwxfHx8fDE3NzE1NzM5NjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -147,7 +147,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 203,
     owner: "Иван П.",
     popular: true,
-    coords: [55.7556, 37.6170], // same building as #1
+    coords: [55.7556, 37.617], // same building as #1
     image:
       "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -161,7 +161,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 56,
     owner: "Михаил С.",
     popular: false,
-    coords: [55.7420, 37.6150],
+    coords: [55.742, 37.615],
     image:
       "https://images.unsplash.com/photo-1760376208640-2ece4c4a0adc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW1tZXIlMjBkcmlsbCUyMGNvbnN0cnVjdGlvbiUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY0fDA&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -189,7 +189,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 92,
     owner: "Андрей Т.",
     popular: false,
-    coords: [55.7300, 37.6500],
+    coords: [55.73, 37.65],
     image:
       "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -245,7 +245,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 63,
     owner: "Виктор Л.",
     popular: true,
-    coords: [55.7493, 37.5870], // same building as #8
+    coords: [55.7493, 37.587], // same building as #8
     image:
       "https://images.unsplash.com/photo-1760376208640-2ece4c4a0adc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW1tZXIlMjBkcmlsbCUyMGNvbnN0cnVjdGlvbiUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY0fDA&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -273,7 +273,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 41,
     owner: "Максим Н.",
     popular: false,
-    coords: [55.7740, 37.5621],
+    coords: [55.774, 37.5621],
     image:
       "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -301,7 +301,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 67,
     owner: "Роман В.",
     popular: true,
-    coords: [55.6500, 37.7440],
+    coords: [55.65, 37.744],
     image:
       "https://images.unsplash.com/photo-1652265156920-dda0e6f900ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZW1vbGl0aW9uJTIwaGFtbWVyJTIwamFja2hhbW1lcnxlbnwxfHx8fDE3NzE1NzE4NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
   },
@@ -315,7 +315,7 @@ export const catalogProducts: ProductCard[] = [
     reviews: 15,
     owner: "Кирилл Б.",
     popular: false,
-    coords: [55.7890, 37.6800],
+    coords: [55.789, 37.68],
     image:
       "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
   },

@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { Heart, MapPin, MessageCircle, X, List } from "lucide-react";
+import { List } from "lucide-react";
 import { Button } from "../ui/button";
+import { BottomSheet } from "../ui/BottomSheet";
 import type { ProductCard } from "@/shared/data/products.data";
+import { MapProductCard } from "./MapProductCard";
 
 const DEFAULT_CENTER: [number, number] = [55.7558, 37.6173];
 const DEFAULT_ZOOM = 12;
@@ -57,79 +59,6 @@ function loadYandexMapsScript(): Promise<void> {
   });
 }
 
-// ─── Compact product card (used in desktop sidebar & mobile bottom‑sheet) ───
-
-function MapProductCard({ product }: { product: ProductCard }) {
-  return (
-    <Link
-      href={`/product/${product.id}`}
-      className="flex gap-4 p-4 bg-white hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
-    >
-      {/* Thumbnail */}
-      <div className="relative w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.title}
-          className="w-full h-full object-cover"
-        />
-        {product.popular && (
-          <span className="absolute top-1.5 left-1.5 px-2 py-0.5 bg-green-500 text-white text-[10px] rounded-full">
-            Популярное
-          </span>
-        )}
-      </div>
-
-      {/* Info */}
-      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-        <div>
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-tight">
-              {product.title}
-            </h3>
-            <button
-              className="p-1.5 hover:bg-gray-100 rounded-full flex-shrink-0 transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-              }}
-            >
-              <Heart className="w-4 h-4 text-gray-400" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-1.5 mt-1">
-            <Heart className="w-3 h-3 text-red-500 fill-red-500" />
-            <span className="text-xs font-medium text-gray-900">
-              {product.rating}
-            </span>
-            <span className="text-xs text-gray-400">({product.reviews})</span>
-          </div>
-
-          <div className="flex items-center text-xs text-gray-500 mt-1">
-            <MapPin className="w-3 h-3 mr-0.5 flex-shrink-0" />
-            <span className="truncate">{product.location}</span>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between mt-2">
-          <div>
-            <span className="text-lg font-bold text-gray-900">
-              {product.price}₽
-            </span>
-            <span className="text-gray-500 text-xs ml-0.5">
-              /{product.period}
-            </span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-8 h-8 flex items-center justify-center rounded-full bg-yellow-500 text-gray-900">
-              <MessageCircle className="w-4 h-4" />
-            </span>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
 // ─── Main component ─────────────────────────────────────────────────────────
 
 export function CatalogMapView({
@@ -145,8 +74,6 @@ export function CatalogMapView({
 
   // Mobile bottom‑sheet state
   const [sheetOpen, setSheetOpen] = useState(false);
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const dragRef = useRef({ startY: 0, startH: 0, dragging: false });
 
   // ── Map init ───────────────────────────────────────
 
@@ -244,37 +171,6 @@ export function CatalogMapView({
     };
   }, [initMap]);
 
-  // ── Mobile bottom‑sheet drag ───────────────────────
-
-  const handleDragStart = (clientY: number) => {
-    if (!sheetRef.current) return;
-    dragRef.current = {
-      startY: clientY,
-      startH: sheetRef.current.offsetHeight,
-      dragging: true,
-    };
-  };
-
-  const handleDragMove = (clientY: number) => {
-    if (!dragRef.current.dragging || !sheetRef.current) return;
-    const delta = dragRef.current.startY - clientY;
-    const newH = Math.max(
-      120,
-      Math.min(window.innerHeight * 0.85, dragRef.current.startH + delta),
-    );
-    sheetRef.current.style.height = `${newH}px`;
-  };
-
-  const handleDragEnd = () => {
-    if (!sheetRef.current) return;
-    dragRef.current.dragging = false;
-    const h = sheetRef.current.offsetHeight;
-    if (h < 120) {
-      setSheetOpen(false);
-      setSelectedProducts([]);
-    }
-  };
-
   // ── Render ─────────────────────────────────────────
 
   return (
@@ -337,73 +233,30 @@ export function CatalogMapView({
       </div>
 
       {/* ── Mobile bottom‑sheet ── */}
-      {sheetOpen && selectedProducts.length > 0 && (
-        <div className="lg:hidden fixed inset-0 z-[60] pointer-events-none">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/30 pointer-events-auto"
-            onClick={() => {
-              setSheetOpen(false);
-              setSelectedProducts([]);
-            }}
-          />
-
-          {/* Sheet */}
-          <div
-            ref={sheetRef}
-            className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl pointer-events-auto flex flex-col max-h-[85vh]"
-          >
-            {/* Drag handle */}
-            <div
-              className="flex justify-center py-3 cursor-grab active:cursor-grabbing flex-shrink-0"
-              onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
-              onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
-              onTouchEnd={handleDragEnd}
-              onMouseDown={(e) => {
-                handleDragStart(e.clientY);
-                const onMove = (ev: MouseEvent) => handleDragMove(ev.clientY);
-                const onUp = () => {
-                  handleDragEnd();
-                  window.removeEventListener("mousemove", onMove);
-                  window.removeEventListener("mouseup", onUp);
-                };
-                window.addEventListener("mousemove", onMove);
-                window.addEventListener("mouseup", onUp);
-              }}
-            >
-              <div className="w-10 h-1 rounded-full bg-gray-300" />
-            </div>
-
-            {/* Header */}
-            <div className="px-4 pb-3 flex items-center justify-between border-b border-gray-100 flex-shrink-0">
-              <p className="text-sm font-medium text-gray-900">
-                {selectedProducts.length}{" "}
-                {selectedProducts.length === 1
-                  ? "объявление"
-                  : selectedProducts.length < 5
-                    ? "объявления"
-                    : "объявлений"}
-              </p>
-              <button
-                onClick={() => {
-                  setSheetOpen(false);
-                  setSelectedProducts([]);
-                }}
-                className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X className="w-4 h-4 text-gray-500" />
-              </button>
-            </div>
-
-            {/* Scrollable products */}
-            <div className="flex-1 overflow-y-auto">
-              {selectedProducts.map((product) => (
-                <MapProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="lg:hidden">
+        <BottomSheet
+          isOpen={sheetOpen && selectedProducts.length > 0}
+          onClose={() => {
+            setSheetOpen(false);
+            setSelectedProducts([]);
+          }}
+          title={
+            selectedProducts.length > 0
+              ? `${selectedProducts.length} ${
+                  selectedProducts.length === 1
+                    ? "объявление"
+                    : selectedProducts.length < 5
+                      ? "объявления"
+                      : "объявлений"
+                }`
+              : undefined
+          }
+        >
+          {selectedProducts.map((product) => (
+            <MapProductCard key={product.id} product={product} />
+          ))}
+        </BottomSheet>
+      </div>
 
       {/* Mobile: "Show as List" button – hidden when bottom sheet is open */}
       {!sheetOpen && (
