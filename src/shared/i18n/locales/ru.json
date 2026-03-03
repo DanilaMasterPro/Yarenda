@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "catalog": "Каталог",
+    "search": "Поиск",
+    "create": "Разместить",
+    "bookings": "Аренды",
+    "profile": "Профиль"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Что-то пошло не так",
+    "retry": "Попробовать снова",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "back": "Назад",
+    "next": "Далее",
+    "done": "Готово",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "sort": "Сортировка",
+    "all": "Все",
+    "noResults": "Ничего не найдено"
+  },
+  "catalog": {
+    "title": "Каталог",
+    "subtitle": "Найдите то, что хотите арендовать",
+    "featured": "Популярные объявления",
+    "categories": "Категории"
+  },
+  "search": {
+    "title": "Поиск",
+    "placeholder": "Поиск вещей...",
+    "recentSearches": "Недавние поиски",
+    "popularCategories": "Популярные категории"
+  },
+  "create": {
+    "title": "Разместить вещь",
+    "subtitle": "Зарабатывайте, сдавая вещи в аренду",
+    "itemName": "Название",
+    "description": "Описание",
+    "price": "Цена за сутки",
+    "category": "Категория",
+    "photos": "Фотографии",
+    "location": "Местоположение",
+    "publish": "Опубликовать"
+  },
+  "bookings": {
+    "title": "Аренды",
+    "asRenter": "Как арендатор",
+    "asOwner": "Как владелец",
+    "active": "Активные",
+    "completed": "Завершённые",
+    "cancelled": "Отменённые",
+    "pending": "Ожидают",
+    "noBookings": "Аренд пока нет"
+  },
+  "profile": {
+    "title": "Профиль",
+    "myListings": "Мои объявления",
+    "reviews": "Отзывы",
+    "settings": "Настройки",
+    "language": "Язык",
+    "logout": "Выйти",
+    "login": "Войти",
+    "register": "Регистрация"
+  },
+  "auth": {
+    "loginTitle": "С возвращением",
+    "registerTitle": "Создать аккаунт",
+    "email": "Email",
+    "phone": "Телефон",
+    "password": "Пароль",
+    "forgotPassword": "Забыли пароль?",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?"
+  }
+}

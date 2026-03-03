@@ -4,6 +4,7 @@ import {
   PreloaderProvider,
   usePreloaderContext,
   GSAPAnimationsProvider,
+  I18nProvider,
 } from "@/providers";
 import { Preloader } from "@/components/ui/Preloader";
 import { useEffect } from "react";
@@ -30,8 +31,10 @@ function PreloaderWrapper({ children }: { children: React.ReactNode }) {
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
-    <PreloaderProvider>
-      <PreloaderWrapper>{children}</PreloaderWrapper>
-    </PreloaderProvider>
+    <I18nProvider>
+      <PreloaderProvider>
+        <PreloaderWrapper>{children}</PreloaderWrapper>
+      </PreloaderProvider>
+    </I18nProvider>
   );
 }
