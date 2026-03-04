@@ -1,6 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import type { DateRange } from "react-day-picker";
+import { getToday, countDays, addYears } from "@/shared/utils";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
@@ -148,7 +150,11 @@ export default function ProductDetailPage() {
   const productData =
     productDetails.find((p) => p.id === Number(id)) ?? productDetails[0];
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+
+  const today = useMemo(() => getToday(), []);
+  const daysCount = useMemo(() => countDays(dateRange), [dateRange]);
+  const totalPrice = daysCount * productData.price;
 
   return (
     <div className="min-h-screen bg-white">
@@ -267,7 +273,15 @@ export default function ProductDetailPage() {
             {/* Calendar */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
               <h3 className="font-semibold mb-4">Выберите даты</h3>
-              <Calendar mode="single" selected={date} onSelect={setDate} />
+              <Calendar
+                mode="range"
+                selected={dateRange}
+                onSelect={setDateRange}
+                disabled={{ before: today }}
+                fromMonth={today}
+                toDate={addYears(today, 2)}
+                numberOfMonths={1}
+              />
             </div>
 
             {/* Pricing */}
@@ -280,7 +294,29 @@ export default function ProductDetailPage() {
                   {productData.originalPrice}₽
                 </span>
               </div>
-              <p className="text-sm text-gray-600 mb-4">за день аренды</p>
+              <p className="text-sm text-gray-600 mb-2">за день аренды</p>
+
+              {daysCount > 0 && (
+                <div className="bg-white rounded-xl p-4 mb-4">
+                  <div className="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>
+                      {productData.price}₽ × {daysCount}{" "}
+                      {daysCount === 1
+                        ? "день"
+                        : daysCount < 5
+                          ? "дня"
+                          : "дней"}
+                    </span>
+                    <span className="font-medium text-gray-900">
+                      {totalPrice}₽
+                    </span>
+                  </div>
+                  <div className="border-t border-gray-200 pt-2 flex justify-between font-semibold text-gray-900">
+                    <span>Итого</span>
+                    <span>{totalPrice}₽</span>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-3">
                 <Button variant="primary" size="lg" className="w-full text-lg">
