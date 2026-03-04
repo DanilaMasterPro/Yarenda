@@ -1,6 +1,13 @@
 "use client";
 
-import { Search, Menu, User, Heart, MapPin } from "lucide-react";
+import {
+  Search,
+  Menu,
+  User,
+  Heart,
+  MapPin,
+  HeartHandshake,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
@@ -23,9 +30,15 @@ export function Header() {
             {/* Logo */}
             <Link
               href="/"
-              className="text-2xl font-bold text-gray-900 flex-shrink-0"
+              className="flex items-center gap-2.5 flex-shrink-0 group"
             >
-              Яренда
+              <div className="w-9 h-9 bg-yellow-500 rounded-lg flex items-center justify-center group-hover:bg-yellow-800 transition-colors shadow-sm">
+                <HeartHandshake
+                  className="h-5 w-5 text-gray-800"
+                  strokeWidth={2.5}
+                />
+              </div>
+              <span className="text-2xl font-bold text-gray-900">Яренда</span>
             </Link>
 
             {/* Search Bar */}
