@@ -13,6 +13,11 @@ import {
   Battery,
   Heart,
 } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Thumbs } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import "swiper/css";
+import "swiper/css/thumbs";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -42,6 +47,9 @@ const productDetails = [
       "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080",
       "https://images.unsplash.com/photo-1760376208640-2ece4c4a0adc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW1tZXIlMjBkcmlsbCUyMGNvbnN0cnVjdGlvbiUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY0fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+      "https://images.unsplash.com/photo-1530124566582-a45a7c79de09?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     ],
     features: [
       { icon: Package, label: "Отличное состояние" },
@@ -139,7 +147,7 @@ export default function ProductDetailPage() {
   const { id } = useParams();
   const productData =
     productDetails.find((p) => p.id === Number(id)) ?? productDetails[0];
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
@@ -157,39 +165,59 @@ export default function ProductDetailPage() {
 
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Left Column - Images */}
-          <div className="lg:sticky lg:top-24 self-start">
-            {/* Main Image */}
-            <div className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden mb-4">
-              <ImageWithFallback
-                src={productData.images[selectedImage]}
-                alt={productData.title}
-                className="w-full h-full object-cover"
-              />
-              <button className="absolute top-4 right-4 p-3 bg-white rounded-full shadow-lg hover:scale-110 transition-transform">
+          <div className="lg:sticky lg:top-24 self-start min-w-0 overflow-hidden">
+            {/* Main Image Swiper */}
+            <div className="relative mb-4">
+              <div className="relative aspect-square rounded-2xl overflow-hidden bg-gray-100">
+                <Swiper
+                  modules={[Thumbs]}
+                  thumbs={{
+                    swiper:
+                      thumbsSwiper && !thumbsSwiper.destroyed
+                        ? thumbsSwiper
+                        : null,
+                  }}
+                  spaceBetween={0}
+                  slidesPerView={1}
+                  className="!absolute !inset-0 !w-full !h-full"
+                >
+                  {productData.images.map((image, index) => (
+                    <SwiperSlide key={index}>
+                      <img
+                        src={image}
+                        alt={`${productData.title} ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+
+              {/* Favorite Button */}
+              <button className="absolute top-4 right-4 z-10 p-3 bg-white rounded-full shadow-lg hover:scale-110 transition-transform">
                 <Heart className="w-6 h-6 text-gray-700" />
               </button>
             </div>
 
-            {/* Thumbnail Gallery */}
-            <div className="flex gap-4">
+            {/* Thumbnail Gallery Swiper */}
+            <Swiper
+              modules={[Thumbs]}
+              onSwiper={setThumbsSwiper}
+              spaceBetween={16}
+              slidesPerView="auto"
+              watchSlidesProgress
+              className="product-thumbs [&_.swiper-slide]:!outline-none [&_.swiper-slide]:!w-20 sm:[&_.swiper-slide]:!w-24 [&_.swiper-slide]:!aspect-square [&_.swiper-slide]:!rounded-lg [&_.swiper-slide]:!overflow-hidden [&_.swiper-slide]:!border-2 [&_.swiper-slide]:!border-transparent [&_.swiper-slide]:!transition-all [&_.swiper-slide]:!cursor-pointer [&_.swiper-slide-thumb-active]:!border-yellow-500 [&_.swiper-slide:hover:not(.swiper-slide-thumb-active)]:!border-gray-300"
+            >
               {productData.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`relative aspect-square w-24 rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImage === index
-                      ? "border-yellow-500"
-                      : "border-transparent hover:border-gray-300"
-                  }`}
-                >
+                <SwiperSlide key={index}>
                   <ImageWithFallback
                     src={image}
                     alt={`${productData.title} ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
-                </button>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           </div>
 
           {/* Right Column - Booking */}
