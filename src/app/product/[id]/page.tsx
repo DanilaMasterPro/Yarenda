@@ -248,15 +248,19 @@ export default function ProductDetailPage() {
 
             {/* Description */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
-              <h3 className="font-semibold text-lg mb-4">Описание</h3>
-              <p className="text-gray-700 whitespace-pre-line">
+              <h3 className="font-semibold text-base sm:text-lg lg:text-lg mb-4">
+                Описание
+              </h3>
+              <p className="text-gray-700 whitespace-pre-line text-sm sm:text-base lg:text-base">
                 {productData.description}
               </p>
             </div>
 
             {/* Map Placeholder */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
-              <h3 className="font-semibold text-lg mb-4">Местоположение</h3>
+              <h3 className="font-semibold text-base sm:text-lg lg:text-lg mb-4">
+                Местоположение
+              </h3>
               <div className="relative w-full h-64 rounded-xl overflow-hidden">
                 <iframe
                   src="https://yandex.ru/map-widget/v1/?ll=37.6060%2C55.7617&z=15&pt=37.6060%2C55.7617%2Cpm2rdm&l=map"
@@ -272,7 +276,9 @@ export default function ProductDetailPage() {
 
             {/* Calendar */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
-              <h3 className="font-semibold mb-4">Выберите даты</h3>
+              <h3 className="font-semibold text-base sm:text-lg lg:text-lg mb-4">
+                Выберите даты
+              </h3>
               <Calendar
                 mode="range"
                 selected={dateRange}
