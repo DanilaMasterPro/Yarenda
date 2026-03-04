@@ -93,10 +93,14 @@ export function CatalogMapView({
   // Desktop sidebar filters panel
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  // Mobile filters panel (inside bottom sheet)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
   // ── URL helpers ─────────────────────────────────────
 
   const clearPoint = useCallback(() => {
     setSelectedProducts([]);
+
     const params = new URLSearchParams(searchParamsRef.current.toString());
     params.delete("point");
     routerRef.current.replace(`?${params.toString()}`, { scroll: false });
@@ -281,7 +285,9 @@ export function CatalogMapView({
           <div className="absolute inset-0 bg-white flex flex-col z-10">
             {/* Panel header */}
             <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
-              <p className="text-sm font-semibold text-gray-900">{t("catalog.filters")}</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {t("catalog.filters")}
+              </p>
               <button
                 onClick={() => setFiltersOpen(false)}
                 className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
@@ -333,11 +339,16 @@ export function CatalogMapView({
       {/* ── Mobile bottom‑sheet ── */}
       <div className="lg:hidden">
         <BottomSheet
-          isOpen={sheetOpen && selectedProducts.length > 0}
+          isOpen={
+            sheetOpen && (selectedProducts.length > 0 || products.length > 0)
+          }
+          onOpen={() => setSheetOpen(true)}
           onClose={closeSheet}
+          onFilters={() => setMobileFiltersOpen(true)}
+          closeButton={selectedProducts.length > 0}
           title={
-            selectedProducts.length > 0
-              ? `${selectedProducts.length} ${
+            selectedProducts.length > 0 || products.length > 0
+              ? `${selectedProducts.length > 0 ? selectedProducts.length : products.length} ${
                   selectedProducts.length === 1
                     ? "объявление"
                     : selectedProducts.length < 5
@@ -347,15 +358,42 @@ export function CatalogMapView({
               : undefined
           }
         >
-          {selectedProducts.map((product) => (
-            <MapProductCard key={product.id} product={product} />
-          ))}
+          {(selectedProducts.length > 0 ? selectedProducts : products).map(
+            (product) => (
+              <MapProductCard key={product.id} product={product} />
+            ),
+          )}
         </BottomSheet>
       </div>
 
+      {/* Mobile: filters overlay */}
+      {mobileFiltersOpen && (
+        <div className="lg:hidden fixed inset-0 z-[70] bg-white flex flex-col">
+          <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => setMobileFiltersOpen(false)}
+              className="p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4 text-gray-500" />
+            </button>
+            <p className="text-sm font-semibold text-gray-900">
+              {t("catalog.filters")}
+            </p>
+          </div>
+          <div className="flex-1 min-h-0 px-4 py-4">
+            <CatalogFilters
+              filters={catalogFilters}
+              mobileOpen={false}
+              onMobileOpenChange={() => {}}
+              variant="inline"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Mobile: "Show as List" button – hidden when bottom sheet is open */}
       {!sheetOpen && (
-        <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <div className="lg:hidden fixed bottom-12 left-1/2 -translate-x-1/2 z-50">
           <Button
             variant="primary"
             size="lg"
