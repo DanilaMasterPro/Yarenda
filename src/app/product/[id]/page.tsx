@@ -223,14 +223,16 @@ export default function ProductDetailPage() {
             {/* Map Placeholder */}
             <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-6">
               <h3 className="font-semibold text-lg mb-4">Местоположение</h3>
-              <div className="relative w-full h-64 bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="w-12 h-12 text-yellow-600 mx-auto mb-3" />
-                  <p className="text-gray-600 text-sm">Карта местоположения</p>
-                  <p className="text-xs text-gray-500">
-                    {productData.location}
-                  </p>
-                </div>
+              <div className="relative w-full h-64 rounded-xl overflow-hidden">
+                <iframe
+                  src="https://yandex.ru/map-widget/v1/?ll=37.6060%2C55.7617&z=15&pt=37.6060%2C55.7617%2Cpm2rdm&l=map"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  allowFullScreen
+                  className="rounded-xl"
+                  title="Яндекс Карта"
+                />
               </div>
             </div>
 
