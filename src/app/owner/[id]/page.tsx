@@ -48,7 +48,14 @@ export default function OwnerProfilePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Profile header (overlaps cover) ─────────────────── */}
         <div className="relative -mt-20 sm:-mt-24 mb-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-8">
+          <div className="relative bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-8">
+              {/* Favorites — absolute on small screens */}
+              <button
+                title="В избранное"
+                className="absolute top-4 right-4 lg:hidden p-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors shadow-sm"
+              >
+                <Heart className="w-5 h-5 text-gray-400" />
+              </button>
             {/* Top row: avatar + info + actions */}
             <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end md:items-center gap-4 sm:gap-6">
               {/* Avatar */}
@@ -93,7 +100,7 @@ export default function OwnerProfilePage() {
                   <Flag className="w-4 h-4" />
                   Пожаловаться
                 </Button>
-                <Button variant="ghost" size="icon" title="В избранное">
+                <Button variant="ghost" size="icon" title="В избранное" className="hidden lg:inline-flex">
                   <Heart className="w-5 h-5 text-gray-400" />
                 </Button>
               </div>
