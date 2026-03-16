@@ -64,15 +64,10 @@ export function PhoneVerificationModal({
             className={`h-12 mb-2 ${error ? "border-red-500" : ""}`}
           />
 
-          {error && (
-            <p className="text-sm text-red-500 mb-4">{error}</p>
-          )}
+          {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
 
           <div className="space-y-3 mt-6">
-            <Button
-              className="w-full h-12 bg-purple-600 hover:bg-purple-700"
-              onClick={handleVerify}
-            >
+            <Button className="w-full h-12" onClick={handleVerify}>
               Подтвердить
             </Button>
             <Button variant="outline" className="w-full" onClick={onCancel}>

@@ -10,6 +10,7 @@ interface EmailLoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onBack: () => void;
+  onContinue: (email: string) => void;
   onRegister: () => void;
 }
 
@@ -17,6 +18,7 @@ export function EmailLoginModal({
   open,
   onOpenChange,
   onBack,
+  onContinue,
   onRegister,
 }: EmailLoginModalProps) {
   const [email, setEmail] = useState("");
@@ -46,10 +48,8 @@ export function EmailLoginModal({
           </div>
 
           <Button
-            className="w-full h-12 bg-purple-200 hover:bg-purple-300 text-purple-900"
-            onClick={() => {
-              // Continue logic
-            }}
+            className="w-full h-12"
+            onClick={() => onContinue(email)}
           >
             Продолжить
           </Button>
@@ -59,11 +59,7 @@ export function EmailLoginModal({
             <div className="h-px bg-gray-300 flex-1" />
           </div>
 
-          <Button
-            variant="ghost"
-            className="w-full mt-4"
-            onClick={onBack}
-          >
+          <Button variant="ghost" className="w-full mt-4" onClick={onBack}>
             Назад
           </Button>
         </div>

@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { CheckCircle } from "lucide-react";
 
 interface EmailVerificationModalProps {
   open: boolean;
@@ -27,9 +28,9 @@ export function EmailVerificationModal({
   const handleVerify = () => {
     // Simulate verification
     setIsVerified(true);
-    setTimeout(() => {
-      onVerified();
-    }, 1500);
+    // setTimeout(() => {
+    //   onVerified();
+    // }, 1500);
   };
 
   if (isVerified) {
@@ -43,12 +44,12 @@ export function EmailVerificationModal({
           </DialogHeader>
 
           <div className="py-8 text-center">
-            <div className="w-20 h-20 bg-orange-400 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="text-4xl">✨</span>
+            <div className="w-20 h-20 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-10 h-10 " />
             </div>
             <p className="text-lg mb-6">Ваш email подтвержден!</p>
-            <Button variant="outline" className="w-full" onClick={onCancel}>
-              Отмена
+            <Button variant="outline" className="w-full" onClick={onVerified}>
+              Отлично!
             </Button>
           </div>
         </DialogContent>
@@ -61,19 +62,16 @@ export function EmailVerificationModal({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl text-center">
-            Регистрация
+            Подтвердите email
           </DialogTitle>
         </DialogHeader>
 
         <div className="py-4">
-          <h3 className="text-lg font-medium text-center mb-4">
-            Подтвердите email
-          </h3>
           <p className="text-center text-gray-600 mb-6">
             Мы отправили код на {email}
           </p>
 
-          <button className="text-sm text-gray-500 hover:text-teal-600 mb-4 block mx-auto">
+          <button className="text-sm text-gray-500 mb-4 block mx-auto">
             Отправить код повторно ({countdown})
           </button>
 
@@ -86,10 +84,7 @@ export function EmailVerificationModal({
           />
 
           <div className="space-y-3">
-            <Button
-              className="w-full h-12 bg-purple-200 hover:bg-purple-300 text-purple-900"
-              onClick={handleVerify}
-            >
+            <Button className="w-full h-12" onClick={handleVerify}>
               Подтвердить
             </Button>
             <Button variant="outline" className="w-full" onClick={onCancel}>
