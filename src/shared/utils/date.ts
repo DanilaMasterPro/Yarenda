@@ -1,4 +1,11 @@
-import type { DateRange } from "react-day-picker";
+/**
+ * Minimal date-range shape compatible with react-day-picker's DateRange.
+ * Defined locally so the module stays framework-agnostic (web + mobile).
+ */
+export interface DateRange {
+  from?: Date;
+  to?: Date;
+}
 
 /**
  * Returns today's date with time set to midnight (00:00:00.000).
