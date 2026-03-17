@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { CheckCircle } from "lucide-react";
+import { useRouter } from "next/router";
 
 interface EmailVerificationModalProps {
   open: boolean;
@@ -24,13 +25,14 @@ export function EmailVerificationModal({
   const [code, setCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
   const [countdown, setCountdown] = useState(24);
+  const router = useRouter();
 
   const handleVerify = () => {
     // Simulate verification
     setIsVerified(true);
-    // setTimeout(() => {
-    //   onVerified();
-    // }, 1500);
+    setTimeout(() => {
+      router.push("/profile");
+    }, 1500);
   };
 
   if (isVerified) {
@@ -48,7 +50,11 @@ export function EmailVerificationModal({
               <CheckCircle className="w-10 h-10 " />
             </div>
             <p className="text-lg mb-6">Ваш email подтвержден!</p>
-            <Button variant="outline" className="w-full" onClick={onVerified}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => router.push("/profile")}
+            >
               Отлично!
             </Button>
           </div>

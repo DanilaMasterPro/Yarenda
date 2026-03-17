@@ -1,14 +1,17 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
 import {
   Heart,
-  MessageCircle,
-  Flag,
+  Pen,
   ShieldCheck,
   Clock,
   MessageSquare,
   MapPin,
+  Menu,
+  Headset,
+  Settings,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -19,9 +22,21 @@ import { ReviewsSlider } from "@/components/widgets/ReviewsSlider";
 import { ProductsSlider } from "@/components/widgets/ProductsSlider";
 import { owners } from "@/shared/data/owner.data";
 
-export default function OwnerProfilePage() {
-  const { id } = useParams();
-  const owner = owners[id as string] ?? owners["1"];
+export default function ProfilePage() {
+  const owner = owners["1"];
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -30,7 +45,7 @@ export default function OwnerProfilePage() {
       {/* Cover gradient — Facebook-style */}
       <div className="relative h-48 sm:h-56 lg:h-64 bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
-          <Breadcrumbs items={[{ label: owner.name }]} />
+          <Breadcrumbs items={[{ label: "Мой профиль" }]} />
         </div>
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE0djEyaDEyVjE0SDM2ek0xMiAxNHYxMmgxMlYxNEgxMnoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-50" />
       </div>
@@ -39,13 +54,33 @@ export default function OwnerProfilePage() {
         {/* ── Profile header (overlaps cover) ─────────────────── */}
         <div className="relative -mt-20 sm:-mt-24 mb-6">
           <div className="relative bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-8">
-              {/* Favorites — absolute on small screens */}
+            {/* More menu — absolute on small screens */}
+            <div className="absolute top-4 right-4 lg:hidden" ref={menuRef}>
               <button
-                title="В избранное"
-                className="absolute top-4 right-4 lg:hidden p-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors shadow-sm"
+                title="Ещё"
+                onClick={() => setMenuOpen((v) => !v)}
+                className="p-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors shadow-sm"
               >
-                <Heart className="w-5 h-5 text-gray-400" />
+                <Menu className="w-5 h-5 text-gray-500" />
               </button>
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
+                  <button className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    <Headset className="w-4 h-4" />
+                    Тех.поддержка
+                  </button>
+                  <button className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                    <Settings className="w-4 h-4" />
+                    Настройки
+                  </button>
+                  <div className="border-t border-gray-100 my-1" />
+                  <button className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                    <LogOut className="w-4 h-4" />
+                    Выйти
+                  </button>
+                </div>
+              )}
+            </div>
             {/* Top row: avatar + info + actions */}
             <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-end md:items-center gap-4 sm:gap-6">
               {/* Avatar */}
@@ -83,16 +118,41 @@ export default function OwnerProfilePage() {
               {/* Action buttons */}
               <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap basis-full lg:basis-auto">
                 <Button variant="primary" className="gap-2">
-                  <MessageCircle className="w-4 h-4" />
-                  Написать
+                  <Pen className="w-4 h-4" />
+                  Редактировать
                 </Button>
                 <Button variant="secondary" className="gap-2">
-                  <Flag className="w-4 h-4" />
-                  Пожаловаться
+                  <ShieldCheck className="w-4 h-4" />
+                  Верификация
                 </Button>
-                <Button variant="ghost" size="icon" title="В избранное" className="hidden lg:inline-flex">
-                  <Heart className="w-5 h-5 text-gray-400" />
-                </Button>
+                {/* More menu — desktop */}
+                <div className="relative hidden lg:block" ref={menuRef}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title="Ещё"
+                    onClick={() => setMenuOpen((v) => !v)}
+                  >
+                    <Menu className="w-5 h-5 text-gray-500" />
+                  </Button>
+                  {menuOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
+                      <button className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                        <Headset className="w-4 h-4" />
+                        Тех.поддержка
+                      </button>
+                      <button className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                        <Settings className="w-4 h-4" />
+                        Настройки
+                      </button>
+                      <div className="border-t border-gray-100 my-1" />
+                      <button className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                        <LogOut className="w-4 h-4" />
+                        Выйти
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -127,16 +187,24 @@ export default function OwnerProfilePage() {
           </div>
         </div>
 
-        {/* ── Reviews slider ──────────────────────────────────── */}
+        {/* ── My Reviews slider ───────────────────────────────── */}
         <ReviewsSlider
           reviews={owner.reviews}
           reviewCount={owner.reviewCount}
+          title="Мои отзывы"
         />
 
-        {/* ── Products catalog ────────────────────────────────── */}
+        {/* ── Favorites ───────────────────────────────────────── */}
         <ProductsSlider
           products={owner.products}
-          title="Объявления"
+          title="Избранное"
+          viewAllText="Смотреть всё избранное"
+        />
+
+        {/* ── My Products catalog ─────────────────────────────── */}
+        <ProductsSlider
+          products={owner.products}
+          title="Мои объявления"
           viewAllText="Смотреть все объявления"
         />
       </div>
