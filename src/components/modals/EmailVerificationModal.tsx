@@ -5,7 +5,8 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { CheckCircle } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { IUser } from "@/shared/types";
 
 interface EmailVerificationModalProps {
   open: boolean;
@@ -30,8 +31,27 @@ export function EmailVerificationModal({
   const handleVerify = () => {
     // Simulate verification
     setIsVerified(true);
+
+    const User: IUser = {
+      id: 1,
+      name: "Иван",
+      secondName: "Иванов",
+      rating: 4,
+      reviewCount: 10,
+      joinedDate: "2022-01-01",
+      location: "Москва",
+      verified: true,
+      responseTime: "1 час",
+      responseRate: "100%",
+      bio: "Привет! Я Иван Иванов, опытный пользователь нашей платформы.",
+      reviews: [],
+      products: [],
+    };
+
+    localStorage.setItem("User", JSON.stringify(User));
+
     setTimeout(() => {
-      router.push("/profile");
+      router.push(`/user/${User.id}`);
     }, 1500);
   };
 
@@ -50,11 +70,7 @@ export function EmailVerificationModal({
               <CheckCircle className="w-10 h-10 " />
             </div>
             <p className="text-lg mb-6">Ваш email подтвержден!</p>
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push("/profile")}
-            >
+            <Button variant="outline" className="w-full" onClick={handleVerify}>
               Отлично!
             </Button>
           </div>

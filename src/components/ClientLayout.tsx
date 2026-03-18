@@ -6,6 +6,7 @@ import {
   GSAPAnimationsProvider,
   I18nProvider,
 } from "@/providers";
+import { Provider as JotaiProvider } from "jotai";
 import { Preloader } from "@/components/ui/Preloader";
 import { useEffect } from "react";
 

@@ -8,9 +8,9 @@ export interface Review {
   text: string;
 }
 
-// ─── Owner ───────────────────────────────────────────────────────────────────
+// ─── User ───────────────────────────────────────────────────────────────────
 
-export interface OwnerProduct {
+export interface IUserProduct {
   id: number;
   title: string;
   price: number;
@@ -23,9 +23,10 @@ export interface OwnerProduct {
   image: string;
 }
 
-export interface Owner {
+export interface IUser {
   id: number;
   name: string;
+  secondName: string;
   rating: number;
   reviewCount: number;
   joinedDate: string;
@@ -35,5 +36,5 @@ export interface Owner {
   responseRate: string;
   bio: string;
   reviews: Review[];
-  products: OwnerProduct[];
+  products: IUserProduct[];
 }

@@ -22,6 +22,15 @@ export function Header() {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  const handleProfileClick = () => {
+    const User = JSON.parse(localStorage.getItem("User") || "null");
+    if (User) {
+      window.location.href = `/user/${User.id}`;
+    } else {
+      setShowAuthModal(true);
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -78,7 +87,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setShowAuthModal(true)}
+                onClick={handleProfileClick}
                 className="hidden lg:flex"
               >
                 <User className="h-5 w-5" />
