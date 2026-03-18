@@ -4,6 +4,8 @@ export const user: IUser = {
   id: 1,
   name: "Иван",
   secondName: "Иванов",
+  email: "test@test.ru",
+  phone: "9991234567",
   rating: 5.0,
   reviewCount: 47,
   joinedDate: "Сентябрь 2022",

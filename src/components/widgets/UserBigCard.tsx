@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { IUser } from "@/shared/types";
 
 interface UserBigCardProps {
@@ -100,9 +101,11 @@ export function UserBigCard({ user, isOwn }: UserBigCardProps) {
         <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap basis-full lg:basis-auto">
           {isOwn ? (
             <>
-              <Button variant="primary" className="gap-2">
-                <Pen className="w-4 h-4" />
-                Редактировать
+              <Button variant="primary" className="gap-2" asChild>
+                <Link href="/profile/edit">
+                  <Pen className="w-4 h-4" />
+                  Редактировать
+                </Link>
               </Button>
               <Button variant="secondary" className="gap-2">
                 <ShieldCheck className="w-4 h-4" />

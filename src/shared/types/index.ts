@@ -27,6 +27,8 @@ export interface IUser {
   id: number;
   name: string;
   secondName: string;
+  email: string;
+  phone: string;
   rating: number;
   reviewCount: number;
   joinedDate: string;

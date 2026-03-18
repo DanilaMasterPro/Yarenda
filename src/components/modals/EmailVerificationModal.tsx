@@ -36,6 +36,8 @@ export function EmailVerificationModal({
       id: 1,
       name: "Иван",
       secondName: "Иванов",
+      email: "test@test.ru",
+      phone: "9991234567",
       rating: 4,
       reviewCount: 10,
       joinedDate: "2022-01-01",
