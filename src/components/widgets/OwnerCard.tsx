@@ -1,12 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, LucideIcon } from "lucide-react";
+import { Heart, Package, Truck, Battery, LucideIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 
+const ICON_MAP: Record<string, LucideIcon> = {
+  package: Package,
+  truck: Truck,
+  "battery-charging": Battery,
+};
+
 interface Feature {
-  icon: LucideIcon;
+  icon: string;
   label: string;
 }
 
@@ -56,7 +62,7 @@ export function OwnerCard({
       {/* Features */}
       <div className="space-y-2 sm:space-y-3 lg:space-y-3 mb-3 sm:mb-4 lg:mb-5">
         {features.map((feature, index) => {
-          const Icon = feature.icon;
+          const Icon = ICON_MAP[feature.icon] ?? Package;
           return (
             <div
               key={index}
