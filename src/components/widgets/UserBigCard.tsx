@@ -102,7 +102,7 @@ export function UserBigCard({ user, isOwn }: UserBigCardProps) {
           {isOwn ? (
             <>
               <Button variant="primary" className="gap-2" asChild>
-                <Link href="/profile/edit">
+                <Link href="/user/edit">
                   <Pen className="w-4 h-4" />
                   Редактировать
                 </Link>
