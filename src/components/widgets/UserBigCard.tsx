@@ -107,10 +107,6 @@ export function UserBigCard({ user, isOwn }: UserBigCardProps) {
                   Редактировать
                 </Link>
               </Button>
-              <Button variant="secondary" className="gap-2">
-                <ShieldCheck className="w-4 h-4" />
-                Верификация
-              </Button>
               {/* More menu — desktop */}
               <div className="relative hidden lg:block" ref={menuRef}>
                 <Button

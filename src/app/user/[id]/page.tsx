@@ -48,15 +48,6 @@ export default function ProfilePage() {
           title={isOwn ? "Мои отзывы" : undefined}
         />
 
-        {/* ── Favorites (own profile only) ────────────────────── */}
-        {isOwn && (
-          <ProductsSlider
-            products={user.products}
-            title="Избранное"
-            viewAllText="Смотреть всё избранное"
-          />
-        )}
-
         {/* ── Products catalog ────────────────────────────────── */}
         <ProductsSlider
           products={user.products}

@@ -218,6 +218,45 @@ export function ImageUpload({
           </p>
         )}
 
+        {/* Previews */}
+        {value.length > 0 && (
+          <div
+            className={cn(
+              "grid gap-3",
+              isMultiple
+                ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
+                : "flex justify-center",
+            )}
+          >
+            {value.map((item, index) => (
+              <div key={item.previewUrl} className="relative group">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.previewUrl}
+                  alt={`Предпросмотр ${index + 1}`}
+                  className={cn(
+                    "object-cover rounded-xl border border-gray-200 shadow-sm",
+                    isMultiple
+                      ? "w-full aspect-square"
+                      : "w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-lg",
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(index);
+                  }}
+                  className="absolute -top-1.5 -right-1.5 p-1 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                  aria-label={`Удалить фото ${index + 1}`}
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Hidden file input */}
         <input
           ref={fileInputRef}
@@ -249,45 +288,6 @@ export function ImageUpload({
 
       {/* Error */}
       {error && <p className="text-sm text-red-600">{error}</p>}
-
-      {/* Previews */}
-      {value.length > 0 && (
-        <div
-          className={cn(
-            "grid gap-3",
-            isMultiple
-              ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4"
-              : "flex justify-center",
-          )}
-        >
-          {value.map((item, index) => (
-            <div key={item.previewUrl} className="relative group">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={item.previewUrl}
-                alt={`Предпросмотр ${index + 1}`}
-                className={cn(
-                  "object-cover rounded-xl border border-gray-200 shadow-sm",
-                  isMultiple
-                    ? "w-full aspect-square"
-                    : "w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-lg",
-                )}
-              />
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFile(index);
-                }}
-                className="absolute -top-1.5 -right-1.5 p-1 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
-                aria-label={`Удалить фото ${index + 1}`}
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
