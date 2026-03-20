@@ -17,6 +17,7 @@ import { Thumbs } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/thumbs";
+import { useFavorites } from "@/hooks";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
@@ -34,6 +35,8 @@ export default function ProductDetailPage() {
     productDetails.find((p) => p.id === Number(id)) ?? productDetails[0];
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const liked = isFavorite(productData.id);
 
   const today = useMemo(() => getToday(), []);
   const daysCount = useMemo(() => countDays(dateRange), [dateRange]);
@@ -83,8 +86,11 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Favorite Button */}
-              <button className="absolute top-4 right-4 z-10 p-3 bg-white rounded-full shadow-lg hover:scale-110 transition-transform">
-                <Heart className="w-6 h-6 text-gray-700" />
+              <button
+                onClick={() => toggleFavorite(productData.id)}
+                className="absolute top-4 right-4 z-10 p-3 bg-white rounded-full shadow-lg hover:scale-110 transition-transform"
+              >
+                <Heart className={`w-6 h-6 ${liked ? "text-red-500 fill-red-500" : "text-gray-700"}`} />
               </button>
             </div>
 

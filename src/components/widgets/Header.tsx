@@ -81,9 +81,11 @@ export function Header() {
               >
                 <Search className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="flex">
-                <Heart className="h-5 w-5" />
-              </Button>
+              <Link href="/favorites">
+                <Button variant="ghost" size="icon" className="flex">
+                  <Heart className="h-5 w-5" />
+                </Button>
+              </Link>
               <Button
                 variant="ghost"
                 size="icon"

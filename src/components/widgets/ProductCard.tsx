@@ -5,6 +5,7 @@ import { Heart, MapPin } from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { ImageWithFallback } from "../ui/ImageWithFallback";
+import { useFavorites } from "@/hooks";
 
 interface ProductCardProps {
   id: number;
@@ -31,6 +32,9 @@ export function ProductCard({
   popular = false,
   image,
 }: ProductCardProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const liked = isFavorite(id);
+
   return (
     <Link
       href={`/product/${id}`}
@@ -47,10 +51,10 @@ export function ProductCard({
           className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
           onClick={(e) => {
             e.preventDefault();
-            // Add to favorites logic
+            toggleFavorite(id);
           }}
         >
-          <Heart className="w-5 h-5 text-gray-700" />
+          <Heart className={`w-5 h-5 ${liked ? "text-red-500 fill-red-500" : "text-gray-700"}`} />
         </button>
         {popular && (
           <span className="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-sm rounded-full">
