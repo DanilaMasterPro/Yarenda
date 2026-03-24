@@ -123,7 +123,7 @@ function StepSection({
 }: StepSectionProps) {
   return (
     <section className="relative py-8 border-b border-gray-200 last:border-b-0">
-      <div className="flex items-start gap-4 mb-5">
+      <div className={cn("flex gap-4 mb-5", subtitle ? "items-start" : "items-center")}>
         <div className="w-9 h-9 rounded-full bg-yellow-500 text-gray-900 flex items-center justify-center text-sm font-bold shrink-0">
           {number}
         </div>
@@ -224,12 +224,18 @@ export default function ProductEditPage() {
 
   const updatePriceOption = useCallback(
     (optionId: string, field: "period" | "price", value: string) => {
+      if (field === "period") {
+        const duplicate = priceOptions.some(
+          (o) => o.id !== optionId && o.period !== "" && o.period === value,
+        );
+        if (duplicate) return;
+      }
       setPriceOptions((prev) =>
         prev.map((o) => (o.id === optionId ? { ...o, [field]: value } : o)),
       );
       setErrors((prev) => ({ ...prev, pricing: undefined }));
     },
-    [],
+    [priceOptions],
   );
 
   const addPriceOption = useCallback(() => {
@@ -537,7 +543,7 @@ export default function ProductEditPage() {
                   <Input
                     id="title"
                     name="title"
-                    value={form.title}
+                    value={form.title} // cath value from data, if not then shoul be empty
                     onChange={handleChange("title")}
                     placeholder="Например: Дрель-шуруповёрт DeWalt DCD791"
                     maxLength={TITLE_MAX_LENGTH}
@@ -598,7 +604,6 @@ export default function ProductEditPage() {
               number={3}
               title="Фотографии"
               subtitle={`До ${MAX_IMAGES} фото. Первое фото станет обложкой объявления.`}
-              error={errors.images}
             >
               <ImageUpload
                 value={images}
@@ -625,21 +630,28 @@ export default function ProductEditPage() {
                       <div className="space-y-1">
                         {index === 0 && (
                           <Label className="text-xs text-gray-500">
-                            Срок аренды
+                            Срок аренды (от)
                           </Label>
                         )}
-                        <Input
-                          value={opt.period}
-                          onChange={(e) =>
-                            updatePriceOption(
-                              opt.id,
-                              "period",
-                              sanitizeText(e.target.value),
-                            )
-                          }
-                          placeholder="Например: 1 день"
-                          className="!rounded-xl !h-11"
-                        />
+                        <div className="relative">
+                          <Input
+                            type="number"
+                            min="1"
+                            value={opt.period}
+                            onChange={(e) =>
+                              updatePriceOption(
+                                opt.id,
+                                "period",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="1"
+                            className="!h-11 pr-10"
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                            дн.
+                          </span>
+                        </div>
                       </div>
                       <div className="space-y-1">
                         {index === 0 && (
