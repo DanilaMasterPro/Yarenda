@@ -18,7 +18,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ImageUpload, type ImageUploadFile } from "@/components/ui/ImageUpload";
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { Header } from "@/components/widgets/Header";
 import { Footer } from "@/components/widgets/Footer";
 import {
@@ -123,7 +122,12 @@ function StepSection({
 }: StepSectionProps) {
   return (
     <section className="relative py-8 border-b border-gray-200 last:border-b-0">
-      <div className={cn("flex gap-4 mb-5", subtitle ? "items-start" : "items-center")}>
+      <div
+        className={cn(
+          "flex gap-4 mb-5",
+          subtitle ? "items-start" : "items-center",
+        )}
+      >
         <div className="w-9 h-9 rounded-full bg-yellow-500 text-gray-900 flex items-center justify-center text-sm font-bold shrink-0">
           {number}
         </div>

@@ -94,9 +94,11 @@ export function Header() {
               >
                 <User className="h-5 w-5" />
               </Button>
-              <Button variant="primary" className="hidden lg:flex">
-                Разместить объявление
-              </Button>
+              <Link href="/product/new/edit">
+                <Button variant="primary" className="hidden lg:flex">
+                  Разместить объявление
+                </Button>
+              </Link>
               <Button
                 variant="ghost"
                 size="icon"
