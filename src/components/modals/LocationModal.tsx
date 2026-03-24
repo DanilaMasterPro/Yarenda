@@ -87,12 +87,26 @@ async function reverseGeocodePoint(point: [number, number]): Promise<string> {
   return obj?.metaDataProperty?.GeocoderMetaData?.text ?? obj?.name ?? "";
 }
 
+export interface LocationSelectData {
+  address: string;
+  coords: [number, number];
+}
+
 interface LocationModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** When provided, the modal returns the selected address + coords via callback */
+  onLocationSelect?: (data: LocationSelectData) => void;
+  /** When true, hides circle/radius and adjusts title for address picking */
+  pickerMode?: boolean;
 }
 
-export function LocationModal({ open, onOpenChange }: LocationModalProps) {
+export function LocationModal({
+  open,
+  onOpenChange,
+  onLocationSelect,
+  pickerMode = false,
+}: LocationModalProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const circleRef = useRef<any>(null);
@@ -233,18 +247,20 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
         });
         mapInstanceRef.current = map;
 
-        // Radius circle
-        const circle = new ymaps.Circle(
-          [coords, radiusMeters],
-          {},
-          {
-            fillColor: "rgba(59, 130, 246, 0.1)",
-            strokeColor: "rgba(59, 130, 246, 0.4)",
-            strokeWidth: 2,
-          },
-        );
-        circleRef.current = circle;
-        map.geoObjects.add(circle);
+        // Radius circle — only for global search mode
+        if (!pickerMode) {
+          const circle = new ymaps.Circle(
+            [coords, radiusMeters],
+            {},
+            {
+              fillColor: "rgba(59, 130, 246, 0.1)",
+              strokeColor: "rgba(59, 130, 246, 0.4)",
+              strokeWidth: 2,
+            },
+          );
+          circleRef.current = circle;
+          map.geoObjects.add(circle);
+        }
 
         // When map center changes (user drag/zoom), reverse geocode the new center
         map.events.add("boundschange", () => {
@@ -256,7 +272,9 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
           boundsTimerRef.current = setTimeout(() => {
             const center = map.getCenter();
             setCoords(center);
-            circle.geometry.setCoordinates(center);
+            if (circleRef.current) {
+              circleRef.current.geometry.setCoordinates(center);
+            }
             isUserTypingRef.current = false;
             reverseGeocode(center);
           }, 400);
@@ -285,8 +303,9 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Sync radius change to circle + fit bounds
+  // Sync radius change to circle + fit bounds (only in global search mode)
   useEffect(() => {
+    if (pickerMode) return;
     if (!isMapReady || !circleRef.current || !mapInstanceRef.current) return;
     circleRef.current.geometry.setRadius(radiusMeters);
     const bounds = circleRef.current.geometry.getBounds();
@@ -300,7 +319,9 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
   }, [radiusMeters, isMapReady]);
 
   const handleApply = () => {
-    // TODO: pass selected location data to parent
+    if (onLocationSelect) {
+      onLocationSelect({ address: locationName, coords });
+    }
     onOpenChange(false);
   };
 
@@ -309,13 +330,15 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
       <DialogContent className="max-w-2xl p-0 overflow-x-hidden">
         <DialogHeader className="p-6 pb-4">
           <DialogTitle className="text-2xl text-center">
-            Где вы хотите арендовать?
+            {pickerMode ? "Выберите адрес" : "Где вы хотите арендовать?"}
           </DialogTitle>
         </DialogHeader>
 
         <div className="px-6 pb-6 min-w-0">
           <p className="text-sm text-gray-500 mb-3">
-            Поиск по городу, району или почтовому индексу
+            {pickerMode
+              ? "Найдите адрес или переместите карту"
+              : "Поиск по городу, району или почтовому индексу"}
           </p>
 
           {/* Search Input with suggestions */}
@@ -367,27 +390,29 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
             )}
           </div>
 
-          {/* Radius Input */}
-          <div className="relative mb-4">
-            <label className="text-xs text-gray-500 absolute left-4 top-1.5 z-10">
-              Радиус
-            </label>
-            <Input
-              type="number"
-              min={1}
-              max={500}
-              value={radiusInput}
-              onChange={(e) => setRadiusInput(e.target.value)}
-              onBlur={() => {
-                const val = parseInt(radiusInput, 10);
-                if (isNaN(val) || val < 1) setRadiusInput("1");
-              }}
-              className="h-12 pt-5 pl-4 pr-16"
-            />
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
-              км
-            </span>
-          </div>
+          {/* Radius Input — hidden in picker mode */}
+          {!pickerMode && (
+            <div className="relative mb-4">
+              <label className="text-xs text-gray-500 absolute left-4 top-1.5 z-10">
+                Радиус
+              </label>
+              <Input
+                type="number"
+                min={1}
+                max={500}
+                value={radiusInput}
+                onChange={(e) => setRadiusInput(e.target.value)}
+                onBlur={() => {
+                  const val = parseInt(radiusInput, 10);
+                  if (isNaN(val) || val < 1) setRadiusInput("1");
+                }}
+                className="h-12 pt-5 pl-4 pr-16"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">
+                км
+              </span>
+            </div>
+          )}
 
           {/* Yandex Map with center-pinned marker */}
           <div className="relative w-full h-96 bg-gray-100 rounded-lg overflow-hidden">
@@ -430,7 +455,7 @@ export function LocationModal({ open, onOpenChange }: LocationModalProps) {
           {/* Apply Button */}
           <div className="mt-4 flex justify-end">
             <Button onClick={handleApply} className="px-8">
-              Применить
+              {pickerMode ? "Сохранить" : "Применить"}
             </Button>
           </div>
         </div>
