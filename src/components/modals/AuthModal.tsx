@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { EmailLoginModal } from "./EmailLoginModal";
-import { EmailVerificationModal } from "./EmailVerificationModal";
 import { RegisterModal } from "./RegisterModal";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";
 import { useEffect } from "react";
@@ -16,30 +15,14 @@ interface AuthModalProps {
 
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const [showEmailLogin, setShowEmailLogin] = useState(false);
-  const [showEmailVerification, setShowEmailVerification] = useState(false);
-  const [verificationEmail, setVerificationEmail] = useState("");
   const [showRegister, setShowRegister] = useState(false);
 
   useEffect(() => {
     if (!open) {
       setShowEmailLogin(false);
-      setShowEmailVerification(false);
       setShowRegister(false);
-      setVerificationEmail("");
     }
   }, [open]);
-
-  if (showEmailVerification) {
-    return (
-      <EmailVerificationModal
-        open={open}
-        onOpenChange={onOpenChange}
-        email={verificationEmail}
-        onVerified={() => onOpenChange(false)}
-        onCancel={() => setShowEmailVerification(false)}
-      />
-    );
-  }
 
   if (showEmailLogin) {
     return (
@@ -47,11 +30,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
         open={open}
         onOpenChange={onOpenChange}
         onBack={() => setShowEmailLogin(false)}
-        onContinue={(email) => {
-          setVerificationEmail(email);
-          setShowEmailLogin(false);
-          setShowEmailVerification(true);
-        }}
+        onSuccess={() => onOpenChange(false)}
         onRegister={() => {
           setShowEmailLogin(false);
           setShowRegister(true);

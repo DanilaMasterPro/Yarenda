@@ -274,6 +274,7 @@ export default function ProductEditPage() {
 
   const handleLocationSelected = useCallback(
     (data: LocationSelectData) => {
+      console.log("Location selected:", data);
       setPendingLocationData(data);
       if (editingLocation) {
         setLocationNameInput(editingLocation.name);

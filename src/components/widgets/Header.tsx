@@ -16,16 +16,19 @@ import { LocationModal } from "../modals/LocationModal";
 import { MobileMenu } from "./MobileMenu";
 import { SearchBar } from "./SearchBar";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Header() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const { user } = useAuth();
+  const router = useRouter();
 
   const handleProfileClick = () => {
-    const User = JSON.parse(localStorage.getItem("User") || "null");
-    if (User) {
-      window.location.href = `/user/${User.id}`;
+    if (user) {
+      router.push(`/user/${user.id}`);
     } else {
       setShowAuthModal(true);
     }

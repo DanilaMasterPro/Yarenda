@@ -118,7 +118,7 @@ export const catalogProducts: ProductCard[] = [
     rating: 4.8,
     reviews: 89,
     owner: "Александр М.",
-    popular: true,
+    popular: true, // Такого параметра не будет, популярность должна рассчитываться изходя из количества выкупов
     coords: [55.7558, 37.6173],
     image:
       "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080",

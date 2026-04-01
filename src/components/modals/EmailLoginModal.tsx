@@ -5,12 +5,13 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface EmailLoginModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onBack: () => void;
-  onContinue: (email: string) => void;
+  onSuccess: () => void;
   onRegister: () => void;
 }
 
@@ -18,22 +19,33 @@ export function EmailLoginModal({
   open,
   onOpenChange,
   onBack,
-  onContinue,
+  onSuccess,
   onRegister,
 }: EmailLoginModalProps) {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { login, isLoading } = useAuth();
+
+  async function handleSubmit() {
+    setError("");
+    try {
+      await login(email, password);
+      onSuccess();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Ошибка входа");
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl text-center">
-            Войти или зарегистрироваться
-          </DialogTitle>
+          <DialogTitle className="text-2xl text-center">Войти</DialogTitle>
         </DialogHeader>
 
-        <div className="py-4">
-          <div className="mb-6">
+        <div className="py-4 space-y-4">
+          <div>
             <Label htmlFor="email" className="text-gray-700">
               Email
             </Label>
@@ -47,19 +59,36 @@ export function EmailLoginModal({
             />
           </div>
 
-          <Button
-            className="w-full h-12"
-            onClick={() => onContinue(email)}
-          >
-            Продолжить
-          </Button>
-
-          <div className="mt-4 flex items-center justify-center">
-            <div className="h-px bg-gray-300 flex-1" />
-            <div className="h-px bg-gray-300 flex-1" />
+          <div>
+            <Label htmlFor="password" className="text-gray-700">
+              Пароль
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+              className="mt-2 h-12"
+            />
           </div>
 
-          <Button variant="ghost" className="w-full mt-4" onClick={onBack}>
+          {error && <p className="text-sm text-red-500">{error}</p>}
+
+          <Button
+            className="w-full h-12"
+            onClick={handleSubmit}
+            disabled={isLoading || !email || !password}
+          >
+            {isLoading ? "Вход..." : "Войти"}
+          </Button>
+
+          <Button variant="ghost" className="w-full" onClick={onRegister}>
+            Нет аккаунта? Зарегистрироваться
+          </Button>
+
+          <Button variant="ghost" className="w-full" onClick={onBack}>
             Назад
           </Button>
         </div>
