@@ -15,13 +15,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const raw = localStorage.getItem("auth_tokens");
-    if (!raw) return;
+    if (!raw) {
+      // No token — hydration done, user is a guest
+      setAuth({ user: null, isLoading: false });
+      return;
+    }
 
-    setAuth((prev) => ({ ...prev, isLoading: true }));
     getProfileRequest()
       .then((user) => setAuth({ user, isLoading: false }))
       .catch(() => {
-        // Token expired — clear storage, user will need to log in again
         clearTokens();
         setAuth({ user: null, isLoading: false });
       });

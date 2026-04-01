@@ -6,4 +6,5 @@ export interface AuthState {
   isLoading: boolean;
 }
 
-export const authAtom = atom<AuthState>({ user: null, isLoading: false });
+// Start as loading so components wait for AuthProvider to finish its initial check
+export const authAtom = atom<AuthState>({ user: null, isLoading: true });

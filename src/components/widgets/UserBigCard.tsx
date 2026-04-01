@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { IUser } from "@/shared/types";
+import { useAuth } from "@/hooks/useAuth";
 
 interface UserBigCardProps {
   user: IUser;
@@ -177,6 +178,7 @@ export function UserBigCard({ user, isOwn }: UserBigCardProps) {
 
 function MoreMenuDropdown() {
   const router = useRouter();
+  const { logout } = useAuth();
   return (
     <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 py-1 z-50">
       <button className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
@@ -190,7 +192,7 @@ function MoreMenuDropdown() {
       <div className="border-t border-gray-100 my-1" />
       <button
         onClick={() => {
-          localStorage.removeItem("User");
+          logout();
           router.push("/");
         }}
         className="flex items-center gap-2 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
