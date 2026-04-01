@@ -31,7 +31,8 @@ export default function ProfilePage() {
             month: "long",
             year: "numeric",
           }),
-          bio: "",
+          description: authUser.description ?? "",
+          avatar: authUser.avatar ?? null,
         }
       : mockUser;
 

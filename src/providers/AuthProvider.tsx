@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { authAtom } from "@/shared/store/auth";
-import { getProfileRequest, clearTokens } from "@/shared/api/auth";
+import { getProfileRequest } from "@/shared/api/auth";
 
 /**
  * Hydrates auth state on mount by reading stored tokens and fetching the
@@ -24,7 +24,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getProfileRequest()
       .then((user) => setAuth({ user, isLoading: false }))
       .catch(() => {
-        clearTokens();
+        // Interceptor already cleared tokens if refresh also failed.
+        // Just mark hydration as done with no user.
         setAuth({ user: null, isLoading: false });
       });
   }, [setAuth]);

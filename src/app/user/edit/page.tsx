@@ -1,31 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/widgets/Header";
 import { Footer } from "@/components/widgets/Footer";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { EditProfileForm } from "@/components/widgets/EditProfileForm";
-import { user as mockUser } from "@/shared/data/user.data";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const [authorized, setAuthorized] = useState(false);
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    try {
-      const userData = JSON.parse(localStorage.getItem("User") ?? "null");
-      if (!userData?.id) {
-        router.replace("/");
-        return;
-      }
-      setAuthorized(true);
-    } catch {
+    if (!isLoading && !user) {
       router.replace("/");
     }
-  }, [router]);
+  }, [isLoading, user, router]);
 
-  if (!authorized) return null;
+  if (isLoading || !user) return null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -36,7 +29,7 @@ export default function EditProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
           <Breadcrumbs
             items={[
-              { label: "Мой профиль", href: `/user/${mockUser.id}` },
+              { label: "Мой профиль", href: `/user/${user.id}` },
               { label: "Редактирование" },
             ]}
           />
@@ -45,13 +38,12 @@ export default function EditProfilePage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Form card overlapping the cover */}
         <div className="relative -mt-20 sm:-mt-24 mb-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-8">
             Редактирование профиля
           </h1>
 
-          <EditProfileForm user={mockUser} />
+          <EditProfileForm user={user} />
         </div>
       </div>
 

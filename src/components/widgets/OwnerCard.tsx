@@ -36,7 +36,7 @@ export function OwnerCard({
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 lg:p-6 mb-6">
       <Link
-        href={`/owner/${ownerId}`}
+        href={`/user/${ownerId}`}
         className="flex items-center gap-3 sm:gap-4 lg:gap-4 mb-3 sm:mb-4 lg:mb-4 group"
       >
         <Avatar className="w-11 h-11 sm:w-16 sm:h-16 lg:w-16 lg:h-16 ring-2 ring-transparent group-hover:ring-yellow-400 transition-all">

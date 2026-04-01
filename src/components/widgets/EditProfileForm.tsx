@@ -7,11 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ImageUpload, type ImageUploadFile } from "@/components/ui/ImageUpload";
-import type { IUser } from "@/shared/types";
+import type { AuthUser } from "@/shared/api/auth";
+import { uploadAvatarRequest, updateUserRequest } from "@/shared/api/auth";
+import { useAtom } from "jotai";
+import { authAtom } from "@/shared/store/auth";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
-const NAME_MAX_LENGTH = 50;
+const USERNAME_MAX_LENGTH = 50;
 const BIO_MAX_LENGTH = 500;
 const PHONE_PATTERN = /^\+?[0-9\s\-()]{7,20}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -25,53 +28,45 @@ function sanitizeText(value: string): string {
 // ── Types ────────────────────────────────────────────────────────────────────
 
 interface FormState {
-  firstName: string;
-  secondName: string;
+  username: string;
   phone: string;
-  email: string;
-  bio: string;
+  description: string;
 }
 
 interface FormErrors {
-  firstName?: string;
-  secondName?: string;
+  username?: string;
   phone?: string;
-  email?: string;
-  bio?: string;
+  description?: string;
   avatar?: string;
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
 
 interface EditProfileFormProps {
-  user: IUser;
+  user: AuthUser;
 }
 
 export function EditProfileForm({ user }: EditProfileFormProps) {
   const router = useRouter();
+  const [, setAuth] = useAtom(authAtom);
 
-  // Form state
   const [form, setForm] = useState<FormState>({
-    firstName: user.name,
-    secondName: user.secondName,
+    username: user.username ?? "",
     phone: user.phone ?? "",
-    email: user.email ?? "",
-    bio: user.bio ?? "",
+    description: user.description ?? "",
   });
 
   const [avatarFiles, setAvatarFiles] = useState<ImageUploadFile[]>([]);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   // ── Field changes ────────────────────────────────────────────────────────
 
   const handleChange = useCallback(
     (field: keyof FormState) =>
       (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const raw = e.target.value;
-        const value =
-          field === "phone" || field === "email" ? raw : sanitizeText(raw);
-        setForm((prev) => ({ ...prev, [field]: value }));
+        setForm((prev) => ({ ...prev, [field]: sanitizeText(e.target.value) }));
         setErrors((prev) => ({ ...prev, [field]: undefined }));
       },
     [],
@@ -81,33 +76,19 @@ export function EditProfileForm({ user }: EditProfileFormProps) {
 
   function validate(): FormErrors {
     const errs: FormErrors = {};
-
-    const firstName = form.firstName.trim();
-    if (!firstName) {
-      errs.firstName = "Введите имя";
-    } else if (firstName.length > NAME_MAX_LENGTH) {
-      errs.firstName = `Максимум ${NAME_MAX_LENGTH} символов`;
+    const username = form.username.trim();
+    if (!username) {
+      errs.username = "Введите имя пользователя";
+    } else if (username.length > USERNAME_MAX_LENGTH) {
+      errs.username = `Максимум ${USERNAME_MAX_LENGTH} символов`;
     }
-
-    const secondName = form.secondName.trim();
-    if (!secondName) {
-      errs.secondName = "Введите фамилию";
-    } else if (secondName.length > NAME_MAX_LENGTH) {
-      errs.secondName = `Максимум ${NAME_MAX_LENGTH} символов`;
+    const phone = form.phone.trim();
+    if (phone && !/^[+]?[\d\s\-().]{7,20}$/.test(phone)) {
+      errs.phone = "Введите корректный номер телефона";
     }
-
-    if (form.phone && !PHONE_PATTERN.test(form.phone)) {
-      errs.phone = "Неверный формат телефона";
+    if (form.description.length > BIO_MAX_LENGTH) {
+      errs.description = `Максимум ${BIO_MAX_LENGTH} символов`;
     }
-
-    if (form.email && !EMAIL_PATTERN.test(form.email)) {
-      errs.email = "Неверный формат email";
-    }
-
-    if (form.bio.length > BIO_MAX_LENGTH) {
-      errs.bio = `Максимум ${BIO_MAX_LENGTH} символов`;
-    }
-
     return errs;
   }
 
@@ -115,6 +96,7 @@ export function EditProfileForm({ user }: EditProfileFormProps) {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setSubmitError("");
 
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -123,40 +105,33 @@ export function EditProfileForm({ user }: EditProfileFormProps) {
     }
 
     setIsSubmitting(true);
-
-    // Build FormData — ready for multipart/form-data API call
-    const payload = new FormData();
-    payload.append("firstName", form.firstName.trim());
-    payload.append("secondName", form.secondName.trim());
-    if (form.phone) payload.append("phone", form.phone.trim());
-    if (form.email) payload.append("email", form.email.trim());
-    payload.append("bio", form.bio.trim());
-    if (avatarFiles[0]) payload.append("avatar", avatarFiles[0].file);
-
-    // TODO: Replace with actual API call
-    // await fetch("/api/profile", { method: "PUT", body: payload });
-
-    // Simulate network delay
-    await new Promise((r) => setTimeout(r, 600));
-
-    // Persist updated fields to localStorage
     try {
-      const stored = JSON.parse(localStorage.getItem("User") ?? "null");
-      const updated = {
-        ...(stored ?? user),
-        name: form.firstName.trim(),
-        secondName: form.secondName.trim(),
-        phone: form.phone.trim(),
-        email: form.email.trim(),
-        bio: form.bio.trim(),
-      };
-      localStorage.setItem("User", JSON.stringify(updated));
-    } catch {
-      // localStorage unavailable — silently skip
-    }
+      // Step 1 — upload avatar if a new file was selected
+      let avatarUrl: string | undefined;
+      if (avatarFiles[0]?.file) {
+        avatarUrl = await uploadAvatarRequest(avatarFiles[0].file);
+      }
 
-    setIsSubmitting(false);
-    router.push(`/user/${user.id}`);
+      // Step 2 — update user via GraphQL mutation
+      const updated = await updateUserRequest({
+        username: form.username.trim(),
+        phone: form.phone.trim() || undefined,
+        description: form.description.trim(),
+        ...(avatarUrl ? { avatar: avatarUrl } : {}),
+      });
+
+      // Step 3 — update Jotai atom so UI reflects changes immediately
+      setAuth((prev) => ({
+        ...prev,
+        user: prev.user ? { ...prev.user, ...updated } : updated,
+      }));
+
+      router.push(`/user/${updated.id}`);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Ошибка сохранения");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -175,102 +150,82 @@ export function EditProfileForm({ user }: EditProfileFormProps) {
         />
       </div>
 
-      {/* ── Name fields ──────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="space-y-2">
-          <Label htmlFor="firstName">Имя</Label>
-          <Input
-            id="firstName"
-            name="firstName"
-            value={form.firstName}
-            onChange={handleChange("firstName")}
-            placeholder="Введите имя"
-            maxLength={NAME_MAX_LENGTH}
-            autoComplete="given-name"
-            aria-invalid={!!errors.firstName}
-          />
-          {errors.firstName && (
-            <p className="text-sm text-red-600">{errors.firstName}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="secondName">Фамилия</Label>
-          <Input
-            id="secondName"
-            name="secondName"
-            value={form.secondName}
-            onChange={handleChange("secondName")}
-            placeholder="Введите фамилию"
-            maxLength={NAME_MAX_LENGTH}
-            autoComplete="family-name"
-            aria-invalid={!!errors.secondName}
-          />
-          {errors.secondName && (
-            <p className="text-sm text-red-600">{errors.secondName}</p>
-          )}
-        </div>
+      {/* ── Email (read-only) ─────────────────────────────── */}
+      <div className="space-y-2">
+        <Label htmlFor="email">Электронная почта</Label>
+        <Input
+          id="email"
+          name="email"
+          value={user.email}
+          readOnly
+          disabled
+          className="bg-gray-50 text-gray-500 cursor-not-allowed"
+        />
+        <p className="text-xs text-gray-400">Почта не может быть изменена</p>
       </div>
 
-      {/* ── Contact fields ───────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="space-y-2">
-          <Label htmlFor="phone">Телефон</Label>
-          <Input
-            id="phone"
-            name="phone"
-            type="tel"
-            value={form.phone}
-            onChange={handleChange("phone")}
-            placeholder="+7 (999) 123-45-67"
-            autoComplete="tel"
-            aria-invalid={!!errors.phone}
-          />
-          {errors.phone && (
-            <p className="text-sm text-red-600">{errors.phone}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange("email")}
-            placeholder="ivan@example.com"
-            autoComplete="email"
-            aria-invalid={!!errors.email}
-          />
-          {errors.email && (
-            <p className="text-sm text-red-600">{errors.email}</p>
-          )}
-        </div>
+      {/* ── Username ─────────────────────────────────────── */}
+      <div className="space-y-2">
+        <Label htmlFor="username">Имя пользователя</Label>
+        <Input
+          id="username"
+          name="username"
+          value={form.username}
+          onChange={handleChange("username")}
+          placeholder="Введите имя пользователя"
+          maxLength={USERNAME_MAX_LENGTH}
+          autoComplete="username"
+          aria-invalid={!!errors.username}
+        />
+        {errors.username && (
+          <p className="text-sm text-red-600">{errors.username}</p>
+        )}
       </div>
 
-      {/* ── Bio ──────────────────────────────────────────── */}
+      {/* ── Phone ──────────────────────── */}
+      <div className="space-y-2">
+        <Label htmlFor="phone">Номер телефона</Label>
+        <Input
+          id="phone"
+          name="phone"
+          type="tel"
+          value={form.phone}
+          onChange={handleChange("phone")}
+          placeholder="+7 (999) 123-45-67"
+          autoComplete="tel"
+          aria-invalid={!!errors.phone}
+        />
+        {errors.phone && (
+          <p className="text-sm text-red-600">{errors.phone}</p>
+        )}
+      </div>
+
+      {/* ── Description ──────────────────────────────────── */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="bio">О себе</Label>
+          <Label htmlFor="description">О себе</Label>
           <span className="text-xs text-gray-400">
-            {form.bio.length}/{BIO_MAX_LENGTH}
+            {form.description.length}/{BIO_MAX_LENGTH}
           </span>
         </div>
         <textarea
-          id="bio"
-          name="bio"
-          value={form.bio}
-          onChange={handleChange("bio")}
+          id="description"
+          name="description"
+          value={form.description}
+          onChange={handleChange("description")}
           placeholder="Расскажите о себе..."
           maxLength={BIO_MAX_LENGTH}
           rows={4}
           autoComplete="off"
-          aria-invalid={!!errors.bio}
+          aria-invalid={!!errors.description}
           className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 transition-colors outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-400/50 resize-y min-h-[100px]"
         />
-        {errors.bio && <p className="text-sm text-red-600">{errors.bio}</p>}
+        {errors.description && (
+          <p className="text-sm text-red-600">{errors.description}</p>
+        )}
       </div>
+
+      {submitError && <p className="text-sm text-red-600">{submitError}</p>}
 
       {/* ── Actions ──────────────────────────────────────── */}
       <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 pt-2">

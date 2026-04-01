@@ -16,7 +16,7 @@ import {
   Flag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import type { IUser } from "@/shared/types";
@@ -71,6 +71,12 @@ export function UserBigCard({ user, isOwn }: UserBigCardProps) {
         {/* Avatar */}
         <div className="-mt-16 sm:-mt-20">
           <Avatar className="w-28 h-28 sm:w-36 sm:h-36 border-4 border-white shadow-lg">
+            {user.avatar && (
+              <AvatarImage
+                src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4200"}${user.avatar}`}
+                alt={user.name}
+              />
+            )}
             <AvatarFallback className="bg-yellow-100 text-yellow-700 text-4xl sm:text-5xl font-bold">
               {user.name.charAt(0)}
             </AvatarFallback>
@@ -144,10 +150,10 @@ export function UserBigCard({ user, isOwn }: UserBigCardProps) {
         </div>
       </div>
 
-      {/* Bio */}
-      {user.bio && (
+      {/* Description */}
+      {user.description && (
         <p className="mt-5 text-gray-600 text-sm sm:text-base leading-relaxed max-w-3xl">
-          {user.bio}
+          {user.description}
         </p>
       )}
 

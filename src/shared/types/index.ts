@@ -36,7 +36,8 @@ export interface IUser {
   verified: boolean;
   responseTime: string;
   responseRate: string;
-  bio: string;
+  description: string;
+  avatar?: string | null;
   reviews: Review[];
   products: IUserProduct[];
 }
