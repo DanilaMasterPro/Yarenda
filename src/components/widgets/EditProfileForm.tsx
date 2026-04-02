@@ -8,7 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ImageUpload, type ImageUploadFile } from "@/components/ui/ImageUpload";
 import type { AuthUser } from "@/shared/api/auth";
-import { uploadAvatarRequest, updateUserRequest } from "@/shared/api/auth";
+import { updateUserRequest } from "@/shared/api/auth";
+import { uploadFilesRequest } from "@/shared/api/uploads";
 import { useAtom } from "jotai";
 import { authAtom } from "@/shared/store/auth";
 
@@ -109,7 +110,8 @@ export function EditProfileForm({ user }: EditProfileFormProps) {
       // Step 1 — upload avatar if a new file was selected
       let avatarUrl: string | undefined;
       if (avatarFiles[0]?.file) {
-        avatarUrl = await uploadAvatarRequest(avatarFiles[0].file);
+        const [url] = await uploadFilesRequest([avatarFiles[0].file]);
+        avatarUrl = url;
       }
 
       // Step 2 — update user via GraphQL mutation

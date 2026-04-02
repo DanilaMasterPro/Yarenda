@@ -26,6 +26,8 @@ import {
 } from "@/components/modals/LocationModal";
 import { allCategories } from "@/shared/data/categories";
 import { cn } from "@/components/ui/utils";
+import { createLocationRequest, createProductRequest } from "@/shared/api";
+import { uploadFilesRequest } from "@/shared/api/uploads";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
@@ -173,6 +175,7 @@ export default function ProductEditPage() {
   const [locations, setLocations] = useState<LocationItem[]>([]);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // ── Category UI state ──────────────────────────────────────────────────
 
@@ -381,6 +384,7 @@ export default function ProductEditPage() {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    setSubmitError(null);
 
     const errs = validate();
     if (Object.keys(errs).length > 0) {
@@ -392,31 +396,47 @@ export default function ProductEditPage() {
 
     setIsSubmitting(true);
 
-    const payload = new FormData();
-    payload.append("category", form.categorySlug);
-    payload.append("subcategory", form.subcategory);
-    payload.append("title", form.title.trim());
-    payload.append("description", form.description.trim());
-    payload.append("cancellationPolicy", form.cancellationPolicy);
-    payload.append("marketValue", form.marketValue.trim());
-    payload.append(
-      "pricing",
-      JSON.stringify(
-        priceOptions
-          .filter((o) => o.period.trim() && o.price.trim())
-          .map((o) => ({ period: o.period.trim(), price: Number(o.price) })),
-      ),
-    );
-    payload.append("locations", JSON.stringify(locations));
-    images.forEach((img, i) => payload.append(`image_${i}`, img.file));
+    try {
+      // Step 1 & 2: Create locations + upload images in parallel
+      const [locationResults, imageUrls] = await Promise.all([
+        Promise.all(
+          locations.map((loc) =>
+            createLocationRequest({
+              name: loc.name,
+              address: loc.address,
+              coords: loc.coords ?? [0, 0],
+            }),
+          ),
+        ),
+        uploadFilesRequest(images.map((img) => img.file)),
+      ]);
 
-    // TODO: Replace with actual API call
-    // await fetch("/api/products", { method: isNew ? "POST" : "PUT", body: payload });
+      const locationIds = locationResults.map((l) => l.id);
 
-    await new Promise((r) => setTimeout(r, 600));
+      // Step 3: Create product with location IDs and uploaded image URLs
+      const filledPrices = priceOptions
+        .filter((o) => o.period.trim() && o.price.trim())
+        .map((o) => ({ fromDays: Number(o.period), price: Number(o.price) }));
 
-    setIsSubmitting(false);
-    router.push("/catalog");
+      await createProductRequest({
+        category: form.subcategory,
+        title: form.title.trim(),
+        description: form.description.trim(),
+        prices: filledPrices,
+        locationIds,
+        cancelCondition: form.cancellationPolicy,
+        marketPrice: Number(form.marketValue),
+        images: imageUrls,
+      });
+
+      router.push("/catalog");
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Не удалось создать объявление",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   // ── Render ─────────────────────────────────────────────────────────────
@@ -878,6 +898,12 @@ export default function ProductEditPage() {
                     : "Сохранить изменения"}
               </Button>
             </div>
+
+            {submitError && (
+              <p className="text-sm text-red-600 text-center pb-4">
+                {submitError}
+              </p>
+            )}
           </form>
         </div>
       </div>
