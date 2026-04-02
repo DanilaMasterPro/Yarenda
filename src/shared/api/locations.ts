@@ -12,9 +12,26 @@ export interface LocationResult {
   id: string;
   name: string;
   address: string;
+  coords?: [number, number];
 }
 
 // ── API Functions ────────────────────────────────────────────────────────────
+
+export async function getUserLocationsRequest(): Promise<LocationResult[]> {
+  const data = await gql<{ profile: { locations: LocationResult[] } }>(`
+    query {
+      profile {
+        locations {
+          id
+          name
+          address
+          coords
+        }
+      }
+    }
+  `);
+  return data.profile.locations;
+}
 
 export async function createLocationRequest(
   input: CreateLocationInput,

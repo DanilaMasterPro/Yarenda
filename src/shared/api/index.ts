@@ -12,6 +12,7 @@ export {
 export { uploadFilesRequest } from "./uploads";
 export {
   createLocationRequest,
+  getUserLocationsRequest,
   type CreateLocationInput,
   type LocationResult,
 } from "./locations";

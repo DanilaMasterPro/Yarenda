@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, type FormEvent } from "react";
+import { useState, useCallback, useEffect, type FormEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   ChevronDown,
@@ -13,6 +13,7 @@ import {
   X,
   Pencil,
   Info,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,9 +27,12 @@ import {
 } from "@/components/modals/LocationModal";
 import { allCategories } from "@/shared/data/categories";
 import { cn } from "@/components/ui/utils";
-import { createLocationRequest, createProductRequest } from "@/shared/api";
+import {
+  createLocationRequest,
+  createProductRequest,
+  getUserLocationsRequest,
+} from "@/shared/api";
 import { uploadFilesRequest } from "@/shared/api/uploads";
-
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const TITLE_MAX_LENGTH = 100;
@@ -173,6 +177,10 @@ export default function ProductEditPage() {
     { id: generateId(), period: "", price: "" },
   ]);
   const [locations, setLocations] = useState<LocationItem[]>([]);
+  const [checkedLocationIds, setCheckedLocationIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [locationsLoading, setLocationsLoading] = useState(true);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -192,6 +200,37 @@ export default function ProductEditPage() {
   const [pendingLocationData, setPendingLocationData] =
     useState<LocationSelectData | null>(null);
   const [locationNameInput, setLocationNameInput] = useState("");
+
+  // ── Load user locations on mount ───────────────────────────────────────
+
+  useEffect(() => {
+    let cancelled = false;
+    setLocationsLoading(true);
+    getUserLocationsRequest()
+      .then((data) => {
+        if (cancelled) return;
+        const items: LocationItem[] = data.map((l) => ({
+          id: l.id,
+          name: l.name,
+          address: l.address,
+          coords: l.coords,
+        }));
+        setLocations(items);
+        // Auto-check the first location
+        if (items.length > 0) {
+          setCheckedLocationIds(new Set([items[0].id]));
+        }
+      })
+      .catch(() => {
+        // User may not be logged in yet — just leave empty
+      })
+      .finally(() => {
+        if (!cancelled) setLocationsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // ── Derived ────────────────────────────────────────────────────────────
 
@@ -301,10 +340,13 @@ export default function ProductEditPage() {
         ),
       );
     } else {
+      const newId = generateId();
       setLocations((prev) => [
         ...prev,
-        { id: generateId(), name, address, coords },
+        { id: newId, name, address, coords },
       ]);
+      // Auto-check newly created locations
+      setCheckedLocationIds((prev) => new Set([...prev, newId]));
     }
 
     setLocationNameOpen(false);
@@ -312,9 +354,35 @@ export default function ProductEditPage() {
     setErrors((prev) => ({ ...prev, locations: undefined }));
   }, [locationNameInput, pendingLocationData, editingLocation]);
 
-  const removeLocation = useCallback((locationId: string) => {
-    setLocations((prev) => prev.filter((l) => l.id !== locationId));
-  }, []);
+  const removeLocation = useCallback(
+    (locationId: string) => {
+      setLocations((prev) => prev.filter((l) => l.id !== locationId));
+      setCheckedLocationIds((prev) => {
+        const next = new Set(prev);
+        next.delete(locationId);
+        return next;
+      });
+    },
+    [],
+  );
+
+  const toggleLocationChecked = useCallback(
+    (locationId: string) => {
+      setCheckedLocationIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(locationId)) {
+          // Don't allow unchecking the last one
+          if (next.size <= 1) return prev;
+          next.delete(locationId);
+        } else {
+          next.add(locationId);
+        }
+        return next;
+      });
+      setErrors((prev) => ({ ...prev, locations: undefined }));
+    },
+    [],
+  );
 
   // ── Validation ─────────────────────────────────────────────────────────
 
@@ -362,8 +430,8 @@ export default function ProductEditPage() {
       }
     }
 
-    if (locations.length === 0) {
-      errs.locations = "Добавьте хотя бы одну локацию";
+    if (locations.length === 0 || checkedLocationIds.size === 0) {
+      errs.locations = "Выберите хотя бы одну локацию";
     }
 
     if (!form.cancellationPolicy) {
@@ -397,10 +465,21 @@ export default function ProductEditPage() {
     setIsSubmitting(true);
 
     try {
-      // Step 1 & 2: Create locations + upload images in parallel
-      const [locationResults, imageUrls] = await Promise.all([
+      // Separate locations: new ones (need creating) vs existing (already have real IDs)
+      const checkedLocations = locations.filter((l) =>
+        checkedLocationIds.has(l.id),
+      );
+      const newLocations = checkedLocations.filter(
+        (l) => !l.id.startsWith("c"),
+      );
+      const existingLocationIds = checkedLocations
+        .filter((l) => l.id.startsWith("c"))
+        .map((l) => l.id);
+
+      // Step 1 & 2: Create new locations + upload images in parallel
+      const [createdLocations, imageUrls] = await Promise.all([
         Promise.all(
-          locations.map((loc) =>
+          newLocations.map((loc) =>
             createLocationRequest({
               name: loc.name,
               address: loc.address,
@@ -411,7 +490,10 @@ export default function ProductEditPage() {
         uploadFilesRequest(images.map((img) => img.file)),
       ]);
 
-      const locationIds = locationResults.map((l) => l.id);
+      const locationIds = [
+        ...existingLocationIds,
+        ...createdLocations.map((l) => l.id),
+      ];
 
       // Step 3: Create product with location IDs and uploaded image URLs
       const filledPrices = priceOptions
@@ -733,57 +815,78 @@ export default function ProductEditPage() {
               subtitle="Ваш точный адрес не будет показан до оплаты и подтверждения аренды."
               error={errors.locations}
             >
-              {locations.length > 0 && (
-                <div className="space-y-3 mb-4">
-                  {locations.map((loc) => (
-                    <div
-                      key={loc.id}
-                      className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-xl"
-                    >
-                      <div className="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center shrink-0">
-                        <MapPin className="w-4 h-4 text-green-600" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm text-gray-900 truncate">
-                          {loc.name}
-                        </p>
-                        <p className="text-xs text-gray-500 truncate">
-                          {loc.address}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => openEditLocation(loc)}
-                          className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                          aria-label="Редактировать локацию"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => removeLocation(loc.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          aria-label="Удалить локацию"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+              {locationsLoading ? (
+                <div className="flex items-center gap-2 text-sm text-gray-500 py-4">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Загрузка локаций…
                 </div>
-              )}
+              ) : (
+                <>
+                  {locations.length > 0 && (
+                    <div className="space-y-3 mb-4">
+                      {locations.map((loc) => {
+                        const isChecked = checkedLocationIds.has(loc.id);
+                        return (
+                          <div
+                            key={loc.id}
+                            className={cn(
+                              "flex items-center gap-3 p-4 bg-white border-2 rounded-xl transition-colors cursor-pointer",
+                              isChecked
+                                ? "border-[#43c682]"
+                                : "border-gray-200 hover:border-gray-300",
+                            )}
+                            onClick={() => toggleLocationChecked(loc.id)}
+                          >
+                            <div className="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center shrink-0">
+                              <MapPin className="w-4 h-4 text-green-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm text-gray-900 truncate">
+                                {loc.name}
+                              </p>
+                              <p className="text-xs text-gray-500 truncate">
+                                {loc.address}
+                              </p>
+                            </div>
+                            <div
+                              className="flex items-center gap-1 shrink-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => openEditLocation(loc)}
+                                className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                                aria-label="Редактировать локацию"
+                              >
+                                <Pencil className="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeLocation(loc.id)}
+                                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                aria-label="Удалить локацию"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
 
-              {locations.length < MAX_LOCATIONS && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="gap-2"
-                  onClick={openAddLocation}
-                >
-                  <Plus className="w-4 h-4" />
-                  Добавить локацию
-                </Button>
+                  {locations.length < MAX_LOCATIONS && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="gap-2"
+                      onClick={openAddLocation}
+                    >
+                      <Plus className="w-4 h-4" />
+                      Добавить локацию
+                    </Button>
+                  )}
+                </>
               )}
             </StepSection>
 
