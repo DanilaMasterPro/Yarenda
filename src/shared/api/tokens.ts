@@ -14,6 +14,9 @@ export function saveTokens(tokens: TokenPair): void {
 
 export function clearTokens(): void {
   localStorage.removeItem("auth_tokens");
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("auth:force-logout"));
+  }
 }
 
 export function getTokens(): TokenPair | null {

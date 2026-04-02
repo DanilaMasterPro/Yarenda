@@ -1,9 +1,10 @@
-import axios, { type InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
 import {
   saveTokens,
   clearTokens,
   getTokens,
   refreshTokensRequest,
+  type TokenPair,
 } from "./tokens";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4200";
@@ -14,7 +15,7 @@ export const apiClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// Attach stored access token to every request
+// Attach access token to every request
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     const tokens = getTokens();
@@ -25,53 +26,72 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-/** Thin GraphQL executor — throws on GraphQL-level errors */
-export async function gql<T>(query: string): Promise<T> {
-  const { data } = await apiClient.post<{
-    data: T;
-    errors?: { message: string }[];
-  }>("", { query });
-  if (data.errors?.length) throw new Error(data.errors[0].message);
-  return data.data;
+// ── Refresh helper (deduplicates parallel calls into one request) ─────────
+let _refreshPromise: Promise<TokenPair> | null = null;
+
+export function refreshOnce(): Promise<TokenPair> {
+  if (_refreshPromise) return _refreshPromise;
+
+  const tokens = getTokens();
+  if (!tokens?.refreshToken) {
+    return Promise.reject(new Error("No refresh token"));
+  }
+
+  _refreshPromise = refreshTokensRequest(tokens.refreshToken)
+    .then((newTokens) => {
+      saveTokens(newTokens);
+      return newTokens;
+    })
+    .finally(() => {
+      _refreshPromise = null;
+    });
+
+  return _refreshPromise;
 }
 
-// ── Auto token refresh on 401 ─────────────────────────────────────────────
-let _isRefreshing = false;
+// ── GraphQL executor ──────────────────────────────────────────────────────
+interface GqlError {
+  message: string;
+  extensions?: { code?: string };
+}
 
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const original = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean;
-    };
+interface GqlResponse<T> {
+  data: T;
+  errors?: GqlError[];
+}
 
-    if (
-      !axios.isAxiosError(error) ||
-      error.response?.status !== 401 ||
-      original._retry ||
-      _isRefreshing
-    ) {
-      return Promise.reject(error);
-    }
+function isAuthError(errors?: GqlError[]): boolean {
+  return !!errors?.some((e) => e.extensions?.code === "UNAUTHENTICATED");
+}
 
-    if (typeof window === "undefined") return Promise.reject(error);
+/**
+ * Sends a GraphQL query/mutation. If the server returns UNAUTHENTICATED,
+ * refreshes tokens and retries once.
+ */
+export async function gql<T>(query: string): Promise<T> {
+  const { data: body } = await apiClient.post<GqlResponse<T>>("", { query });
 
-    const tokens = getTokens();
-    if (!tokens?.refreshToken) return Promise.reject(error);
+  // Happy path or non-auth error
+  if (!isAuthError(body.errors)) {
+    if (body.errors?.length) throw new Error(body.errors[0].message);
+    return body.data;
+  }
 
-    original._retry = true;
-    _isRefreshing = true;
+  // Auth error → refresh tokens and retry once
+  if (typeof window === "undefined") {
+    throw new Error(body.errors![0].message);
+  }
 
-    try {
-      const newTokens = await refreshTokensRequest(tokens.refreshToken);
-      saveTokens(newTokens);
-      original.headers.Authorization = `Bearer ${newTokens.accessToken}`;
-      return apiClient(original);
-    } catch {
-      clearTokens();
-      return Promise.reject(error);
-    } finally {
-      _isRefreshing = false;
-    }
-  },
-);
+  try {
+    await refreshOnce();
+  } catch {
+    clearTokens();
+    throw new Error(body.errors![0].message);
+  }
+
+  const { data: retryBody } = await apiClient.post<GqlResponse<T>>("", {
+    query,
+  });
+  if (retryBody.errors?.length) throw new Error(retryBody.errors[0].message);
+  return retryBody.data;
+}

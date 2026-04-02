@@ -7,16 +7,23 @@ import { getProfileRequest } from "@/shared/api/auth";
 
 /**
  * Hydrates auth state on mount by reading stored tokens and fetching the
- * user profile. If the access token is expired (and refresh isn't implemented
- * yet), clears stored tokens and leaves the user logged out.
+ * user profile. If the access token is expired the `gql()` layer will
+ * transparently refresh tokens and retry before reaching this code.
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [, setAuth] = useAtom(authAtom);
 
+  // When tokens are force-cleared (e.g. refresh failed), reset the Jotai atom.
+  useEffect(() => {
+    const handler = () => setAuth({ user: null, isLoading: false });
+    window.addEventListener("auth:force-logout", handler);
+    return () => window.removeEventListener("auth:force-logout", handler);
+  }, [setAuth]);
+
+  // Hydrate auth on first mount
   useEffect(() => {
     const raw = localStorage.getItem("auth_tokens");
     if (!raw) {
-      // No token — hydration done, user is a guest
       setAuth({ user: null, isLoading: false });
       return;
     }
@@ -24,8 +31,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getProfileRequest()
       .then((user) => setAuth({ user, isLoading: false }))
       .catch(() => {
-        // Interceptor already cleared tokens if refresh also failed.
-        // Just mark hydration as done with no user.
         setAuth({ user: null, isLoading: false });
       });
   }, [setAuth]);
