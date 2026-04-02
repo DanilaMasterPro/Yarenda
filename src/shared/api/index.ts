@@ -12,9 +12,13 @@ export {
 export { uploadFilesRequest } from "./uploads";
 export {
   createLocationRequest,
+  updateLocationRequest,
+  deleteLocationRequest,
   getUserLocationsRequest,
   type CreateLocationInput,
+  type UpdateLocationInput,
   type LocationResult,
+  type DeleteLocationResult,
 } from "./locations";
 export {
   createProductRequest,

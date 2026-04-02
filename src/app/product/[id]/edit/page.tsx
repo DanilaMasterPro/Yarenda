@@ -14,6 +14,7 @@ import {
   Pencil,
   Info,
   Loader2,
+  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,8 @@ import { allCategories } from "@/shared/data/categories";
 import { cn } from "@/components/ui/utils";
 import {
   createLocationRequest,
+  updateLocationRequest,
+  deleteLocationRequest,
   createProductRequest,
   getUserLocationsRequest,
 } from "@/shared/api";
@@ -181,6 +184,12 @@ export default function ProductEditPage() {
     new Set(),
   );
   const [locationsLoading, setLocationsLoading] = useState(true);
+  const [locationSaving, setLocationSaving] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [deletingLocationId, setDeletingLocationId] = useState<string | null>(
+    null,
+  );
+  const [deleteErrorModalOpen, setDeleteErrorModalOpen] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -305,12 +314,14 @@ export default function ProductEditPage() {
   const openAddLocation = useCallback(() => {
     setEditingLocation(null);
     setLocationNameInput("");
+    setLocationError(null);
     setLocationMapOpen(true);
   }, []);
 
   const openEditLocation = useCallback((loc: LocationItem) => {
     setEditingLocation(loc);
     setLocationNameInput(loc.name);
+    setLocationError(null);
     setLocationMapOpen(true);
   }, []);
 
@@ -326,63 +337,102 @@ export default function ProductEditPage() {
     [editingLocation],
   );
 
-  const saveLocation = useCallback(() => {
+  const saveLocation = useCallback(async () => {
     const name = locationNameInput.trim();
     if (!name || !pendingLocationData) return;
 
     const address = pendingLocationData.address;
     const coords = pendingLocationData.coords;
 
-    if (editingLocation) {
-      setLocations((prev) =>
-        prev.map((l) =>
-          l.id === editingLocation.id ? { ...l, name, address, coords } : l,
-        ),
-      );
-    } else {
-      const newId = generateId();
-      setLocations((prev) => [
-        ...prev,
-        { id: newId, name, address, coords },
-      ]);
-      // Auto-check newly created locations
-      setCheckedLocationIds((prev) => new Set([...prev, newId]));
-    }
+    setLocationSaving(true);
+    setLocationError(null);
 
-    setLocationNameOpen(false);
-    setPendingLocationData(null);
-    setErrors((prev) => ({ ...prev, locations: undefined }));
+    try {
+      if (editingLocation) {
+        // Update existing location via API
+        const updated = await updateLocationRequest({
+          id: editingLocation.id,
+          name,
+          address,
+          coords: coords ?? [0, 0],
+        });
+        setLocations((prev) =>
+          prev.map((l) =>
+            l.id === editingLocation.id
+              ? {
+                  ...l,
+                  name: updated.name,
+                  address: updated.address,
+                  coords: updated.coords,
+                }
+              : l,
+          ),
+        );
+      } else {
+        // Create new location via API
+        const created = await createLocationRequest({
+          name,
+          address,
+          coords: coords ?? [0, 0],
+        });
+        setLocations((prev) => [
+          ...prev,
+          {
+            id: created.id,
+            name: created.name,
+            address: created.address,
+            coords: created.coords,
+          },
+        ]);
+        // Auto-check newly created locations
+        setCheckedLocationIds((prev) => new Set([...prev, created.id]));
+      }
+
+      setLocationNameOpen(false);
+      setPendingLocationData(null);
+      setErrors((prev) => ({ ...prev, locations: undefined }));
+    } catch (err) {
+      setLocationError(
+        err instanceof Error ? err.message : "Не удалось сохранить локацию",
+      );
+    } finally {
+      setLocationSaving(false);
+    }
   }, [locationNameInput, pendingLocationData, editingLocation]);
 
-  const removeLocation = useCallback(
-    (locationId: string) => {
+  const removeLocation = useCallback(async (locationId: string) => {
+    setDeletingLocationId(locationId);
+    setLocationError(null);
+
+    try {
+      await deleteLocationRequest(locationId);
       setLocations((prev) => prev.filter((l) => l.id !== locationId));
       setCheckedLocationIds((prev) => {
         const next = new Set(prev);
         next.delete(locationId);
         return next;
       });
-    },
-    [],
-  );
+    } catch {
+      setDeleteErrorModalOpen(true);
+    } finally {
+      setDeletingLocationId(null);
+    }
+  }, []);
 
-  const toggleLocationChecked = useCallback(
-    (locationId: string) => {
-      setCheckedLocationIds((prev) => {
-        const next = new Set(prev);
-        if (next.has(locationId)) {
-          // Don't allow unchecking the last one
-          if (next.size <= 1) return prev;
-          next.delete(locationId);
-        } else {
-          next.add(locationId);
-        }
-        return next;
-      });
-      setErrors((prev) => ({ ...prev, locations: undefined }));
-    },
-    [],
-  );
+  const toggleLocationChecked = useCallback((locationId: string) => {
+    setCheckedLocationIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(locationId)) {
+        // Don't allow unchecking the last one
+        if (next.size <= 1) return prev;
+        next.delete(locationId);
+      } else {
+        next.add(locationId);
+      }
+      return next;
+    });
+    setErrors((prev) => ({ ...prev, locations: undefined }));
+  }, []);
 
   // ── Validation ─────────────────────────────────────────────────────────
 
@@ -465,35 +515,13 @@ export default function ProductEditPage() {
     setIsSubmitting(true);
 
     try {
-      // Separate locations: new ones (need creating) vs existing (already have real IDs)
-      const checkedLocations = locations.filter((l) =>
-        checkedLocationIds.has(l.id),
-      );
-      const newLocations = checkedLocations.filter(
-        (l) => !l.id.startsWith("c"),
-      );
-      const existingLocationIds = checkedLocations
-        .filter((l) => l.id.startsWith("c"))
+      // All locations are already persisted — just collect checked IDs
+      const locationIds = locations
+        .filter((l) => checkedLocationIds.has(l.id))
         .map((l) => l.id);
 
-      // Step 1 & 2: Create new locations + upload images in parallel
-      const [createdLocations, imageUrls] = await Promise.all([
-        Promise.all(
-          newLocations.map((loc) =>
-            createLocationRequest({
-              name: loc.name,
-              address: loc.address,
-              coords: loc.coords ?? [0, 0],
-            }),
-          ),
-        ),
-        uploadFilesRequest(images.map((img) => img.file)),
-      ]);
-
-      const locationIds = [
-        ...existingLocationIds,
-        ...createdLocations.map((l) => l.id),
-      ];
+      // Upload images
+      const imageUrls = await uploadFilesRequest(images.map((img) => img.file));
 
       // Step 3: Create product with location IDs and uploaded image URLs
       const filledPrices = priceOptions
@@ -865,8 +893,13 @@ export default function ProductEditPage() {
                                 onClick={() => removeLocation(loc.id)}
                                 className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                 aria-label="Удалить локацию"
+                                disabled={deletingLocationId === loc.id}
                               >
-                                <Trash2 className="w-4 h-4" />
+                                {deletingLocationId === loc.id ? (
+                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="w-4 h-4" />
+                                )}
                               </button>
                             </div>
                           </div>
@@ -1021,6 +1054,41 @@ export default function ProductEditPage() {
         pickerMode
       />
 
+      {/* ── Delete-error info modal ───────────────────────────────── */}
+      {deleteErrorModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setDeleteErrorModalOpen(false)}
+          />
+          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Невозможно удалить
+              </h3>
+              <button
+                type="button"
+                onClick={() => setDeleteErrorModalOpen(false)}
+                className="p-1 text-gray-400 hover:text-gray-600 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <p className="text-sm text-gray-600">
+              Локация используется другими товарами и не может быть удалена.
+            </p>
+            <Button
+              type="button"
+              variant="primary"
+              className="w-full"
+              onClick={() => setDeleteErrorModalOpen(false)}
+            >
+              Понятно
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* ── Step 2: Name input modal ────────────────────────────────── */}
       {locationNameOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -1057,13 +1125,31 @@ export default function ProductEditPage() {
                 className="!rounded-xl !h-11"
                 autoFocus
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && locationNameInput.trim()) {
+                  if (
+                    e.key === "Enter" &&
+                    locationNameInput.trim() &&
+                    !locationSaving
+                  ) {
                     e.preventDefault();
                     saveLocation();
                   }
                 }}
               />
             </div>
+
+            {editingLocation && (
+              <div className="flex gap-3 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <p className="text-xs text-amber-700">
+                  Если эта локация используется в других объявлениях, изменения
+                  коснутся их тоже.
+                </p>
+              </div>
+            )}
+
+            {locationError && (
+              <p className="text-sm text-red-600">{locationError}</p>
+            )}
 
             <div className="flex gap-3 pt-2">
               <Button
@@ -1081,10 +1167,17 @@ export default function ProductEditPage() {
                 type="button"
                 variant="primary"
                 className="flex-1"
-                disabled={!locationNameInput.trim()}
+                disabled={!locationNameInput.trim() || locationSaving}
                 onClick={saveLocation}
               >
-                Сохранить
+                {locationSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Сохранение…
+                  </>
+                ) : (
+                  "Сохранить"
+                )}
               </Button>
             </div>
           </div>
