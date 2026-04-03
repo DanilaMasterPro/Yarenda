@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 
 interface EmailLoginModalProps {
@@ -26,12 +27,14 @@ export function EmailLoginModal({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { login, isLoading } = useAuth();
+  const router = useRouter();
 
   async function handleSubmit() {
     setError("");
     try {
-      await login(email, password);
+      const user = await login(email, password);
       onSuccess();
+      router.push(`/user/${user.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка входа");
     }

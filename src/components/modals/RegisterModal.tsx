@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 
 interface RegisterModalProps {
@@ -22,12 +23,14 @@ export function RegisterModal({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { register, isLoading } = useAuth();
+  const router = useRouter();
 
   async function handleSubmit() {
     setError("");
     try {
-      await register(email, password);
+      const user = await register(email, password);
       onOpenChange(false);
+      router.push(`/user/${user.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка регистрации");
     }
