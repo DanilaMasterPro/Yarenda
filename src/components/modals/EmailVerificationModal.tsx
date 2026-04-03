@@ -45,7 +45,7 @@ export function EmailVerificationModal({
       verified: true,
       responseTime: "1 час",
       responseRate: "100%",
-      bio: "Привет! Я Иван Иванов, опытный пользователь нашей платформы.",
+      description: "Привет! Я Иван Иванов, опытный пользователь нашей платформы.",
       reviews: [],
       products: [],
     };
