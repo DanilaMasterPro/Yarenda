@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { ImageUpload, type ImageUploadFile } from "@/components/ui/ImageUpload";
 import { Header } from "@/components/widgets/Header";
 import { Footer } from "@/components/widgets/Footer";
+import { useAuth } from "@/hooks/useAuth";
 import {
   LocationModal,
   type LocationSelectData,
@@ -163,6 +164,13 @@ export default function ProductEditPage() {
   const { id } = useParams();
   const router = useRouter();
   const isNew = id === "new";
+  const { user, isLoading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/");
+    }
+  }, [authLoading, user, router]);
 
   // ── Form state ─────────────────────────────────────────────────────────
 
@@ -550,6 +558,10 @@ export default function ProductEditPage() {
   }
 
   // ── Render ─────────────────────────────────────────────────────────────
+
+  if (!authLoading && !user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

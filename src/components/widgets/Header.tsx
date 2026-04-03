@@ -34,6 +34,14 @@ export function Header() {
     }
   };
 
+  const handleCreateClick = () => {
+    if (user) {
+      router.push("/product/new/edit");
+    } else {
+      setShowAuthModal(true);
+    }
+  };
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
@@ -97,11 +105,13 @@ export function Header() {
               >
                 <User className="h-5 w-5" />
               </Button>
-              <Link href="/product/new/edit">
-                <Button variant="primary" className="hidden lg:flex">
-                  Разместить объявление
-                </Button>
-              </Link>
+              <Button
+                variant="primary"
+                className="hidden lg:flex"
+                onClick={handleCreateClick}
+              >
+                Разместить объявление
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
