@@ -18,10 +18,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            set -e
             source ~/.nvm/nvm.sh
             source ~/.bashrc || true
             cd Yarenda
-            git pull
+            git fetch origin main
+            git reset --hard origin/main
             yarn install --frozen-lockfile
             yarn build
             pm2 restart client
