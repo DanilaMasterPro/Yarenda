@@ -2,12 +2,13 @@ import { gql, API_URL, imageUrl } from "./client";
 import type {
   Product,
   ProductDetail,
+  PriceInput,
   CreateProductInput,
   CreateProductResult,
 } from "@/shared/types/product.types";
 
 export { imageUrl };
-export type { Product, ProductDetail, CreateProductInput, CreateProductResult };
+export type { Product, ProductDetail, PriceInput, CreateProductInput, CreateProductResult };
 
 /** Get the price for the lowest fromDays tier (base daily price) */
 export function getBasePrice(
