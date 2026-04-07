@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { Heart, MapPin, MessageCircle } from "lucide-react";
-import type { ProductCard } from "@/shared/data/products.data";
+import type { ProductCardData } from "@/shared/types/product.types";
 
 interface MapProductCardProps {
-  product: ProductCard;
+  product: ProductCardData;
 }
 
 export function MapProductCard({ product }: MapProductCardProps) {
@@ -65,7 +65,7 @@ export function MapProductCard({ product }: MapProductCardProps) {
               {product.price}₽
             </span>
             <span className="text-gray-500 text-xs ml-0.5">
-              /{product.period}
+              /день
             </span>
           </div>
           <div className="flex items-center gap-1.5">

@@ -1,20 +1,11 @@
-import type { Review, IUserProduct } from "@/shared/types";
+import type { Review } from "@/shared/types";
+import type {
+  ProductCardData,
+  ProductDetailOwner,
+  ProductDetailFeature,
+} from "@/shared/types/product.types";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-export interface ProductDetailOwner {
-  id?: number;
-  name: string;
-  avatar: string;
-  rating: number;
-  joinedDate: string;
-}
-
-export interface ProductDetailFeature {
-  /** Feather / icon name — each platform resolves to its own icon component */
-  icon: string;
-  label: string;
-}
+export type { ProductDetailOwner, ProductDetailFeature };
 
 export interface ProductDetail {
   id: number;
@@ -29,7 +20,7 @@ export interface ProductDetail {
   features: ProductDetailFeature[];
   description: string;
   reviews: Review[];
-  relatedProducts: IUserProduct[];
+  relatedProducts: ProductCardData[];
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -102,7 +93,7 @@ export const productDetails: ProductDetail[] = [
         rating: 5.0,
         reviews: 145,
         location: "Москва, Южный округ",
-        owner: "Александр М.",
+        owner: { username: "Александр М.", avatar: null },
         popular: false,
         image:
           "https://images.unsplash.com/photo-1770386582823-3a7094e35b22?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxib3NjaCUyMGhhbW1lciUyMGRyaWxsJTIwY2FzZXxlbnwxfHx8fDE3NzE1NzM5NjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -115,7 +106,7 @@ export const productDetails: ProductDetail[] = [
         rating: 4.8,
         reviews: 203,
         location: "Москва, Центр",
-        owner: "Александр М.",
+        owner: { username: "Александр М.", avatar: null },
         popular: true,
         image:
           "https://images.unsplash.com/photo-1751486403850-fae53b6ab0e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYWtpdGElMjBkcmlsbCUyMHNldCUyMGNhc2V8ZW58MXx8fHwxNzcxNTczOTYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -128,7 +119,7 @@ export const productDetails: ProductDetail[] = [
         rating: 4.7,
         reviews: 56,
         location: "Москва, Центр",
-        owner: "Александр М.",
+        owner: { username: "Александр М.", avatar: null },
         popular: false,
         image:
           "https://images.unsplash.com/photo-1615746363486-92cd8c5e0a90?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqaWdzYXclMjBwb3dlciUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -141,7 +132,7 @@ export const productDetails: ProductDetail[] = [
         rating: 4.9,
         reviews: 145,
         location: "Москва, Центр",
-        owner: "Александр М.",
+        owner: { username: "Александр М.", avatar: null },
         popular: true,
         image:
           "https://images.unsplash.com/photo-1619759247378-6a73e3ad45f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaXJjdWxhciUyMHNhdyUyMGNvbnN0cnVjdGlvbnxlbnwxfHx8fDE3NzE1NzE4NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",

@@ -9,22 +9,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/widgets/ProductCard";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number | string;
-  period: string;
-  rating: number;
-  reviews: number;
-  location: string;
-  owner: string;
-  popular?: boolean;
-  image: string;
-}
+import type { ProductCardData } from "@/shared/types/product.types";
 
 interface ProductsSliderProps {
-  products: Product[];
+  products: ProductCardData[];
   title: string;
   viewAllText?: string;
 }
@@ -79,7 +67,6 @@ export function ProductsSlider({
               id={product.id}
               title={product.title}
               price={product.price}
-              period={product.period}
               rating={product.rating}
               reviews={product.reviews}
               location={product.location}

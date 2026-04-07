@@ -5,14 +5,14 @@ import { useCallback, useSyncExternalStore } from "react";
 const STORAGE_KEY = "favorites";
 
 let cachedRaw: string | null = null;
-let cachedResult: number[] = [];
+let cachedResult: string[] = [];
 
-function getSnapshot(): number[] {
+function getSnapshot(): string[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw !== cachedRaw) {
       cachedRaw = raw;
-      cachedResult = raw ? JSON.parse(raw) : [];
+      cachedResult = raw ? JSON.parse(raw).map(String) : [];
     }
     return cachedResult;
   } catch {
@@ -20,8 +20,8 @@ function getSnapshot(): number[] {
   }
 }
 
-const EMPTY: number[] = [];
-function getServerSnapshot(): number[] {
+const EMPTY: string[] = [];
+function getServerSnapshot(): string[] {
   return EMPTY;
 }
 
@@ -48,11 +48,11 @@ export function useFavorites() {
   );
 
   const isFavorite = useCallback(
-    (id: number) => favoriteIds.includes(id),
+    (id: string) => favoriteIds.includes(id),
     [favoriteIds],
   );
 
-  const toggleFavorite = useCallback((id: number) => {
+  const toggleFavorite = useCallback((id: string) => {
     const current = getSnapshot();
     const next = current.includes(id)
       ? current.filter((fid) => fid !== id)

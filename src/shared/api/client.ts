@@ -7,8 +7,14 @@ import {
   type TokenPair,
 } from "./tokens";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4200";
-const GQL_URL = BASE_URL + "/graphql";
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4200";
+const GQL_URL = API_URL + "/graphql";
+
+export function imageUrl(path: string): string {
+  if (!path || path.startsWith("http")) return path;
+  return `${API_URL}${path}`;
+}
 
 export const apiClient = axios.create({
   baseURL: GQL_URL,
@@ -68,8 +74,14 @@ function isAuthError(errors?: GqlError[]): boolean {
  * Sends a GraphQL query/mutation. If the server returns UNAUTHENTICATED,
  * refreshes tokens and retries once.
  */
-export async function gql<T>(query: string): Promise<T> {
-  const { data: body } = await apiClient.post<GqlResponse<T>>("", { query });
+export async function gql<T>(
+  query: string,
+  variables?: Record<string, unknown>,
+): Promise<T> {
+  const { data: body } = await apiClient.post<GqlResponse<T>>("", {
+    query,
+    variables,
+  });
 
   // Happy path or non-auth error
   if (!isAuthError(body.errors)) {
@@ -91,6 +103,7 @@ export async function gql<T>(query: string): Promise<T> {
 
   const { data: retryBody } = await apiClient.post<GqlResponse<T>>("", {
     query,
+    variables,
   });
   if (retryBody.errors?.length) throw new Error(retryBody.errors[0].message);
   return retryBody.data;

@@ -1,20 +1,9 @@
-// ─── Types ───────────────────────────────────────────────────────────────────
+import type { ProductCardData } from "@/shared/types/product.types";
 
-export interface ProductCard {
-  id: number;
-  title: string;
-  category?: string;
-  price: number | string;
-  period: string;
-  rating: number;
-  reviews: number;
-  location: string;
-  owner: string;
-  popular: boolean;
-  image: string;
-  /** [latitude, longitude] — will come from API in the future */
-  coords?: [number, number];
-}
+export type { ProductCardData };
+
+/** @deprecated Use ProductCardData from @/shared/types/product.types */
+export type ProductCard = ProductCardData;
 
 // ─── Featured Listings (главная страница) ────────────────────────────────────
 
@@ -28,7 +17,7 @@ export const featuredListings: ProductCard[] = [
     rating: 4.9,
     reviews: 127,
     location: "Москва, Арбат",
-    owner: "Александр М.",
+    owner: { username: "Александр М.", avatar: null },
     popular: true,
     image:
       "https://images.unsplash.com/photo-1760376208640-2ece4c4a0adc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW1tZXIlMjBkcmlsbCUyMGNvbnN0cnVjdGlvbiUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY0fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -42,7 +31,7 @@ export const featuredListings: ProductCard[] = [
     rating: 4.8,
     reviews: 89,
     location: "Санкт-Петербург",
-    owner: "Дмитрий К.",
+    owner: { username: "Дмитрий К.", avatar: null },
     popular: false,
     image:
       "https://images.unsplash.com/photo-1710242078536-fe62a305a86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3JkbGVzcyUyMGRyaWxsJTIwZHJpdmVyfGVufDF8fHx8MTc3MTU3MTg2NXww&ixlib=rb-4.1.0&q=80&w=1080",
@@ -56,7 +45,7 @@ export const featuredListings: ProductCard[] = [
     rating: 5.0,
     reviews: 203,
     location: "Москва, Центр",
-    owner: "Иван П.",
+    owner: { username: "Иван П.", avatar: null },
     popular: true,
     image:
       "https://images.unsplash.com/photo-1652265156920-dda0e6f900ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZW1vbGl0aW9uJTIwaGFtbWVyJTIwamFja2hhbW1lcnxlbnwxfHx8fDE3NzE1NzE4NjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -70,7 +59,7 @@ export const featuredListings: ProductCard[] = [
     rating: 4.7,
     reviews: 56,
     location: "Казань",
-    owner: "Михаил С.",
+    owner: { username: "Михаил С.", avatar: null },
     popular: false,
     image:
       "https://images.unsplash.com/photo-1615746363486-92cd8c5e0a90?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxqaWdzYXclMjBwb3dlciUyMHRvb2x8ZW58MXx8fHwxNzcxNTcxODY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -84,7 +73,7 @@ export const featuredListings: ProductCard[] = [
     rating: 4.9,
     reviews: 145,
     location: "Екатеринбург",
-    owner: "Сергей В.",
+    owner: { username: "Сергей В.", avatar: null },
     popular: true,
     image:
       "https://images.unsplash.com/photo-1619759247378-6a73e3ad45f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaXJjdWxhciUyMHNhdyUyMGNvbnN0cnVjdGlvbnxlbnwxfHx8fDE3NzE1NzE4NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -98,7 +87,7 @@ export const featuredListings: ProductCard[] = [
     rating: 4.8,
     reviews: 92,
     location: "Новосибирск",
-    owner: "Андрей Т.",
+    owner: { username: "Андрей Т.", avatar: null },
     popular: false,
     image:
       "https://images.unsplash.com/photo-1674117068691-034b4bf87bc2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhbmdsZSUyMGdyaW5kZXIlMjB0b29sfGVufDF8fHx8MTc3MTU3MTg2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
@@ -117,7 +106,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.8,
     reviews: 89,
-    owner: "Александр М.",
+    owner: { username: "Александр М.", avatar: null },
     popular: true, // Такого параметра не будет, популярность должна рассчитываться изходя из количества выкупов
     coords: [55.7558, 37.6173],
     image:
@@ -131,7 +120,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 5.0,
     reviews: 145,
-    owner: "Дмитрий К.",
+    owner: { username: "Дмитрий К.", avatar: null },
     popular: false,
     coords: [55.756, 37.6176], // same building as #1
     image:
@@ -145,7 +134,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.9,
     reviews: 203,
-    owner: "Иван П.",
+    owner: { username: "Иван П.", avatar: null },
     popular: true,
     coords: [55.7556, 37.617], // same building as #1
     image:
@@ -159,7 +148,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.7,
     reviews: 56,
-    owner: "Михаил С.",
+    owner: { username: "Михаил С.", avatar: null },
     popular: false,
     coords: [55.742, 37.615],
     image:
@@ -173,7 +162,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 5.0,
     reviews: 127,
-    owner: "Сергей В.",
+    owner: { username: "Сергей В.", avatar: null },
     popular: true,
     coords: [55.7421, 37.6153], // same building as #4
     image:
@@ -187,7 +176,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.8,
     reviews: 92,
-    owner: "Андрей Т.",
+    owner: { username: "Андрей Т.", avatar: null },
     popular: false,
     coords: [55.73, 37.65],
     image:
@@ -201,7 +190,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.6,
     reviews: 34,
-    owner: "Олег Р.",
+    owner: { username: "Олег Р.", avatar: null },
     popular: false,
     coords: [55.7302, 37.6503], // same building as #6
     image:
@@ -215,7 +204,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.9,
     reviews: 78,
-    owner: "Николай Г.",
+    owner: { username: "Николай Г.", avatar: null },
     popular: true,
     coords: [55.7494, 37.5872],
     image:
@@ -229,7 +218,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.8,
     reviews: 112,
-    owner: "Павел Д.",
+    owner: { username: "Павел Д.", avatar: null },
     popular: false,
     coords: [55.7496, 37.5875], // same building as #8
     image:
@@ -243,7 +232,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.7,
     reviews: 63,
-    owner: "Виктор Л.",
+    owner: { username: "Виктор Л.", avatar: null },
     popular: true,
     coords: [55.7493, 37.587], // same building as #8
     image:
@@ -257,7 +246,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.5,
     reviews: 28,
-    owner: "Артём С.",
+    owner: { username: "Артём С.", avatar: null },
     popular: false,
     coords: [55.7395, 37.6536],
     image:
@@ -271,7 +260,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.6,
     reviews: 41,
-    owner: "Максим Н.",
+    owner: { username: "Максим Н.", avatar: null },
     popular: false,
     coords: [55.774, 37.5621],
     image:
@@ -285,7 +274,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.4,
     reviews: 19,
-    owner: "Евгений О.",
+    owner: { username: "Евгений О.", avatar: null },
     popular: false,
     coords: [55.7742, 37.5624], // same building as #12
     image:
@@ -299,7 +288,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 5.0,
     reviews: 67,
-    owner: "Роман В.",
+    owner: { username: "Роман В.", avatar: null },
     popular: true,
     coords: [55.65, 37.744],
     image:
@@ -313,7 +302,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.3,
     reviews: 15,
-    owner: "Кирилл Б.",
+    owner: { username: "Кирилл Б.", avatar: null },
     popular: false,
     coords: [55.789, 37.68],
     image:
@@ -327,7 +316,7 @@ export const catalogProducts: ProductCard[] = [
     period: "день",
     rating: 4.9,
     reviews: 88,
-    owner: "Денис Ф.",
+    owner: { username: "Денис Ф.", avatar: null },
     popular: true,
     coords: [55.7892, 37.6803], // same building as #15
     image:

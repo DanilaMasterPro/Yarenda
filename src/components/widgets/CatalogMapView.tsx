@@ -8,7 +8,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { BottomSheet } from "../ui/BottomSheet";
 import { CatalogFilters } from "./CatalogFilters";
-import type { ProductCard } from "@/shared/data/products.data";
+import type { ProductCardData } from "@/shared/types/product.types";
 import { catalogFilters } from "@/shared/data/filters.data";
 import { MapProductCard } from "./MapProductCard";
 
@@ -22,7 +22,7 @@ declare global {
 }
 
 interface CatalogMapViewProps {
-  products: ProductCard[];
+  products: ProductCardData[];
   onSwitchToList: () => void;
 }
 
@@ -85,7 +85,7 @@ export function CatalogMapView({
   });
 
   // Selected products for a point (can be multiple at same coords)
-  const [selectedProducts, setSelectedProducts] = useState<ProductCard[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<ProductCardData[]>([]);
 
   // Mobile bottom‑sheet state
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -145,7 +145,7 @@ export function CatalogMapView({
         `${c[0].toFixed(3)},${c[1].toFixed(3)}`;
       const groups = new Map<
         string,
-        { coords: [number, number]; items: ProductCard[] }
+        { coords: [number, number]; items: ProductCardData[] }
       >();
 
       products.forEach((product) => {

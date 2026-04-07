@@ -12,20 +12,15 @@ import { Preloader } from "@/components/ui/Preloader";
 import { useEffect } from "react";
 
 function PreloaderWrapper({ children }: { children: React.ReactNode }) {
-  const { setPreloaderComplete, isPreloaderComplete } = usePreloaderContext();
-
-  const handlePreloaderComplete = () => {
-    setPreloaderComplete(true);
-  };
+  const { isPreloaderComplete } = usePreloaderContext();
 
   useEffect(() => {
-    // Предотвращаем скролл во время загрузки
     document.body.style.overflow = isPreloaderComplete ? "" : "hidden";
   }, [isPreloaderComplete]);
 
   return (
     <>
-      <Preloader onComplete={handlePreloaderComplete} />
+      <Preloader visible={!isPreloaderComplete} />
       <GSAPAnimationsProvider>
         <AuthProvider>{children}</AuthProvider>
       </GSAPAnimationsProvider>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
@@ -9,6 +9,7 @@ import {
   SlidersHorizontal,
   Map,
   Check,
+  Loader2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -20,8 +21,15 @@ import { Footer } from "@/components/widgets/Footer";
 import { ProductCard } from "@/components/widgets/ProductCard";
 import { CatalogFilters } from "@/components/widgets/CatalogFilters";
 import { CatalogMapView } from "@/components/widgets/CatalogMapView";
-import { catalogProducts } from "@/shared/data/products.data";
+import {
+  fetchProducts,
+  imageUrl,
+  getBasePrice,
+  type Product,
+} from "@/shared/api/products";
 import { catalogFilters } from "@/shared/data/filters.data";
+
+const PAGE_SIZE = 10;
 
 type SortOption = "default" | "cheap" | "expensive" | "date";
 
@@ -30,10 +38,62 @@ export function CatalogClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [showFilters, setShowFilters] = useState(false);
-  const [filteredProducts, setFilteredProducts] = useState(catalogProducts);
   const [sortBy, setSortBy] = useState<SortOption>("default");
   const [sortOpen, setSortOpen] = useState(false);
 
+  // ── Products state ──────────────────────────────────────────────
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const skipRef = useRef(0);
+  const loadingRef = useRef(false);
+  const hasMoreRef = useRef(true);
+
+  const loadProducts = useCallback(async () => {
+    if (loadingRef.current || !hasMoreRef.current) return;
+    loadingRef.current = true;
+    setLoading(true);
+    try {
+      const data = await fetchProducts(skipRef.current, PAGE_SIZE);
+      setProducts((prev) => [...prev, ...data]);
+      skipRef.current += data.length;
+      if (data.length < PAGE_SIZE) {
+        hasMoreRef.current = false;
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error("Failed to fetch products:", err);
+    } finally {
+      loadingRef.current = false;
+      setLoading(false);
+    }
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Infinite scroll ─────────────────────────────────────────────
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) loadProducts();
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [loadProducts]);
+
+  // ── Sorting ─────────────────────────────────────────────────────
   const SORT_OPTIONS: { value: SortOption; label: string }[] = [
     { value: "default", label: t("catalog.sortDefault") },
     { value: "cheap", label: t("catalog.sortCheap") },
@@ -41,9 +101,11 @@ export function CatalogClient() {
     { value: "date", label: t("catalog.sortDate") },
   ];
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortBy === "cheap") return Number(a.price) - Number(b.price);
-    if (sortBy === "expensive") return Number(b.price) - Number(a.price);
+  const sortedProducts = [...products].sort((a, b) => {
+    const pa = getBasePrice(a.prices);
+    const pb = getBasePrice(b.prices);
+    if (sortBy === "cheap") return pa - pb;
+    if (sortBy === "expensive") return pb - pa;
     return 0;
   });
 
@@ -108,7 +170,7 @@ export function CatalogClient() {
 
                 {/* Results count */}
                 <p className="text-sm text-gray-600 ml-4">
-                  {t("catalog.foundCount", { count: catalogProducts.length })}
+                  {t("catalog.foundCount", { count: products.length })}
                 </p>
 
                 <div className="sort-select relative ml-auto">
@@ -171,23 +233,19 @@ export function CatalogClient() {
                     key={product.id}
                     id={product.id}
                     title={product.title}
-                    price={product.price}
-                    period={product.period}
-                    rating={product.rating}
-                    reviews={product.reviews}
-                    location={product.location}
+                    price={getBasePrice(product.prices)}
+                    location={product.location[0]?.address ?? ""}
                     owner={product.owner}
-                    popular={product.popular}
-                    image={product.image}
+                    image={imageUrl(product.images[0] ?? "")}
                   />
                 ))}
               </div>
 
-              {/* Load More Button */}
-              <div className="mt-12 text-center">
-                <Button variant="outline" size="lg">
-                  {t("catalog.loadMore")}
-                </Button>
+              {/* Infinite scroll sentinel */}
+              <div ref={sentinelRef} className="mt-8 flex justify-center py-4">
+                {loading && (
+                  <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                )}
               </div>
             </div>
           </div>
@@ -211,7 +269,7 @@ export function CatalogClient() {
       {viewMode === "map" && (
         <div className="relative w-full h-[calc(100vh-80px)]">
           <CatalogMapView
-            products={filteredProducts}
+            products={[]}
             onSwitchToList={openList}
           />
         </div>

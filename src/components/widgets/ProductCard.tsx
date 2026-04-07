@@ -3,19 +3,20 @@
 import Link from "next/link";
 import { Heart, MapPin } from "lucide-react";
 import { Button } from "../ui/button";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ImageWithFallback } from "../ui/ImageWithFallback";
 import { useFavorites } from "@/hooks";
+import { imageUrl } from "@/shared/api/products";
+import type { ProductOwner } from "@/shared/types/product.types";
 
-interface ProductCardProps {
-  id: number;
+export interface ProductCardProps {
+  id: string | number;
   title: string;
   price: number | string;
-  period: string;
-  rating: number;
-  reviews: number;
+  rating?: number;
+  reviews?: number;
   location: string;
-  owner: string;
+  owner: ProductOwner;
   popular?: boolean;
   image: string;
 }
@@ -24,7 +25,6 @@ export function ProductCard({
   id,
   title,
   price,
-  period,
   rating,
   reviews,
   location,
@@ -33,7 +33,7 @@ export function ProductCard({
   image,
 }: ProductCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
-  const liked = isFavorite(id);
+  const liked = isFavorite(String(id));
 
   return (
     <Link
@@ -51,7 +51,7 @@ export function ProductCard({
           className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
           onClick={(e) => {
             e.preventDefault();
-            toggleFavorite(id);
+            toggleFavorite(String(id));
           }}
         >
           <Heart className={`w-5 h-5 ${liked ? "text-red-500 fill-red-500" : "text-gray-700"}`} />
@@ -68,18 +68,23 @@ export function ProductCard({
         <h3 className="font-semibold text-lg text-gray-900 mb-2">{title}</h3>
 
         <div className="flex items-center gap-2 mb-3 relative">
-          <div className="flex items-center">
-            <Heart className="w-4 h-4 text-red-500 fill-red-500" />
-            <span className="ml-1 text-sm font-medium text-gray-900">
-              {rating}
-            </span>
-          </div>
-          <span className="text-sm text-gray-500">({reviews} отзывов)</span>
+          {rating != null && (
+            <div className="flex items-center">
+              <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+              <span className="ml-1 text-sm font-medium text-gray-900">
+                {rating}
+              </span>
+            </div>
+          )}
+          {reviews != null && (
+            <span className="text-sm text-gray-500">({reviews} отзывов)</span>
+          )}
 
           {/* Owner Avatar */}
           <Avatar className="absolute top-1 right-0 w-10 h-10 border-2 border-gray-100">
+            {owner.avatar && <AvatarImage src={imageUrl(owner.avatar)} alt={owner.username} />}
             <AvatarFallback className="bg-yellow-500 text-dark-500 text-sm font-semibold">
-              {owner.charAt(0)}
+              {owner.username.charAt(0)}
             </AvatarFallback>
           </Avatar>
         </div>
@@ -92,7 +97,7 @@ export function ProductCard({
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
           <div>
             <span className="text-2xl font-bold text-gray-900">{price}₽</span>
-            <span className="text-gray-600 ml-1">/{period}</span>
+            <span className="text-gray-600 ml-1">/день</span>
           </div>
           <Button className="bg-yellow-500 hover:bg-yellow-600 text-dark-500">
             Забронировать

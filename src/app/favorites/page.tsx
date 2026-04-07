@@ -1,6 +1,7 @@
 "use client";
 
-import { Heart, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Heart, Trash2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useFavorites } from "@/hooks";
 import { Header } from "@/components/widgets/Header";
@@ -8,40 +9,37 @@ import { Footer } from "@/components/widgets/Footer";
 import { ProductCard } from "@/components/widgets/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import { catalogProducts, featuredListings } from "@/shared/data/products.data";
-import { productDetails } from "@/shared/data/productDetail.data";
-
-function getAllProducts() {
-  const map = new Map<number, (typeof catalogProducts)[number]>();
-
-  for (const p of featuredListings) map.set(p.id, p);
-  for (const p of catalogProducts) map.set(p.id, p);
-  for (const p of productDetails) {
-    map.set(p.id, {
-      id: p.id,
-      title: p.title,
-      price: p.price,
-      period: "день",
-      rating: p.rating,
-      reviews: p.reviewCount,
-      location: p.location,
-      owner: p.owner.name,
-      popular: false,
-      image: p.images[0],
-    });
-  }
-
-  return map;
-}
-
-const allProducts = getAllProducts();
+import {
+  fetchProduct,
+  imageUrl,
+  getBasePrice,
+  type ProductDetail,
+} from "@/shared/api/products";
 
 export default function FavoritesPage() {
   const { favoriteIds, toggleFavorite } = useFavorites();
+  const [products, setProducts] = useState<ProductDetail[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const favoriteProducts = favoriteIds
-    .map((id) => allProducts.get(id))
-    .filter(Boolean);
+  useEffect(() => {
+    if (favoriteIds.length === 0) {
+      setProducts([]);
+      return;
+    }
+
+    setLoading(true);
+    Promise.allSettled(favoriteIds.map((id) => fetchProduct(id)))
+      .then((results) => {
+        const loaded = results
+          .filter(
+            (r): r is PromiseFulfilledResult<ProductDetail> =>
+              r.status === "fulfilled",
+          )
+          .map((r) => r.value);
+        setProducts(loaded);
+      })
+      .finally(() => setLoading(false));
+  }, [favoriteIds]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -52,7 +50,7 @@ export default function FavoritesPage() {
 
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Избранное</h1>
-          {favoriteProducts.length > 0 && (
+          {products.length > 0 && (
             <Button
               variant="outline"
               onClick={() => {
@@ -66,7 +64,11 @@ export default function FavoritesPage() {
           )}
         </div>
 
-        {favoriteProducts.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-24">
+            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          </div>
+        ) : products.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 pt-12 text-center">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
               <Heart className="w-10 h-10 text-gray-400" />
@@ -84,24 +86,19 @@ export default function FavoritesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {favoriteProducts.map(
-              (product) =>
-                product && (
-                  <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    title={product.title}
-                    price={product.price}
-                    period={product.period}
-                    rating={product.rating}
-                    reviews={product.reviews}
-                    location={product.location}
-                    owner={product.owner}
-                    popular={product.popular}
-                    image={product.image}
-                  />
-                ),
-            )}
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                price={getBasePrice(product.prices)}
+                rating={product.rating}
+                reviews={product.reviewCount}
+                location={product.location[0]?.address ?? ""}
+                owner={product.owner}
+                image={imageUrl(product.images[0] ?? "")}
+              />
+            ))}
           </div>
         )}
       </div>

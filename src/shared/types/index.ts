@@ -10,18 +10,10 @@ export interface Review {
 
 // ─── User ───────────────────────────────────────────────────────────────────
 
-export interface IUserProduct {
-  id: number;
-  title: string;
-  price: number;
-  period: string;
-  rating: number;
-  reviews: number;
-  location: string;
-  owner: string;
-  popular: boolean;
-  image: string;
-}
+import type { ProductCardData } from "./product.types";
+
+/** @deprecated Use ProductCardData from @/shared/types/product.types */
+export type IUserProduct = ProductCardData;
 
 export interface IUser {
   id: number;

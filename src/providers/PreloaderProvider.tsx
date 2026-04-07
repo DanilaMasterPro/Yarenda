@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 
 interface PreloaderContextValue {
   isPreloaderComplete: boolean;
@@ -19,6 +25,12 @@ export const PreloaderProvider: React.FC<PreloaderProviderProps> = ({
   children,
 }) => {
   const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
+
+  // Fallback: hide preloader after 2s for pages that don’t control it (e.g. home page)
+  useEffect(() => {
+    const t = setTimeout(() => setIsPreloaderComplete(true), 1000);
+    return () => clearTimeout(t);
+  }, []);
 
   const setPreloaderComplete = useCallback((complete: boolean) => {
     setIsPreloaderComplete(complete);
