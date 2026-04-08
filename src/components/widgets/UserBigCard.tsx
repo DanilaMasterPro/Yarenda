@@ -73,7 +73,7 @@ export function UserBigCard({ user, isOwn }: UserBigCardProps) {
           <Avatar className="w-28 h-28 sm:w-36 sm:h-36 border-4 border-white shadow-lg">
             {user.avatar && (
               <AvatarImage
-                src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:4200"}${user.avatar}`}
+                src={user.avatar}
                 alt={user.name}
               />
             )}

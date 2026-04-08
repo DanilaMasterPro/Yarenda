@@ -26,3 +26,6 @@ export {
   type CreateProductInput,
   type CreateProductResult,
 } from "./products";
+export {
+  fetchUser,
+} from "./users";
