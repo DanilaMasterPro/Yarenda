@@ -348,6 +348,7 @@ export default function ProductDetailPage() {
                     price={getBasePrice(p.prices)}
                     location={p.location[0]?.address ?? ""}
                     owner={product.owner}
+                    ownerId={product.owner.id}
                     image={imageUrl(p.images[0] ?? "")}
                   />
                 ))}

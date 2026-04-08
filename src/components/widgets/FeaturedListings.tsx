@@ -71,6 +71,7 @@ export function FeaturedListings() {
                       price={getBasePrice(listing.prices)}
                       location={listing.location[0]?.address ?? ""}
                       owner={listing.owner}
+                      ownerId={listing.ownerId}
                       image={imageUrl(listing.images[0] ?? "")}
                     />
                   </SwiperSlide>
@@ -88,6 +89,7 @@ export function FeaturedListings() {
                     price={getBasePrice(listing.prices)}
                     location={listing.location[0]?.address ?? ""}
                     owner={listing.owner}
+                    ownerId={listing.ownerId}
                     image={imageUrl(listing.images[0] ?? "")}
                   />
                 </div>

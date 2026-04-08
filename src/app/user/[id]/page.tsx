@@ -64,6 +64,7 @@ export default function ProfilePage() {
           products={user.products}
           title={isOwn ? "Мои объявления" : "Объявления"}
           viewAllText="Смотреть все объявления"
+          ownerId={isOwn ? id : undefined}
         />
       </div>
 

@@ -66,6 +66,7 @@ export interface ProductDetail {
   reviewCount: number;
   images: string[];
   cancelCondition: string;
+  marketPrice: number;
   createdAt: string;
   owner: ProductDetailOwnerAPI;
   location: ProductLocationDetail[];
@@ -131,4 +132,23 @@ export interface CreateProductResult {
   id: string;
   title: string;
   category: string;
+}
+
+export interface UpdateProductInput {
+  id: string;
+  category?: string;
+  title?: string;
+  description?: string;
+  prices?: PriceInput[];
+  locationIds?: string[];
+  cancelCondition?: string;
+  marketPrice?: number;
+  images?: string[];
+}
+
+export interface UpdateProductResult {
+  id: string;
+  title: string;
+  description: string;
+  updatedAt: string;
 }

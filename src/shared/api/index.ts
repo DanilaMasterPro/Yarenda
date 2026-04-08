@@ -22,9 +22,12 @@ export {
 } from "./locations";
 export {
   createProductRequest,
+  updateProductRequest,
   type PriceInput,
   type CreateProductInput,
   type CreateProductResult,
+  type UpdateProductInput,
+  type UpdateProductResult,
 } from "./products";
 export {
   fetchUser,

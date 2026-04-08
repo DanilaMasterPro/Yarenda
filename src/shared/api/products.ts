@@ -5,10 +5,12 @@ import type {
   PriceInput,
   CreateProductInput,
   CreateProductResult,
+  UpdateProductInput,
+  UpdateProductResult,
 } from "@/shared/types/product.types";
 
 export { imageUrl };
-export type { Product, ProductDetail, PriceInput, CreateProductInput, CreateProductResult };
+export type { Product, ProductDetail, PriceInput, CreateProductInput, CreateProductResult, UpdateProductInput, UpdateProductResult };
 
 /** Get the price for the lowest fromDays tier (base daily price) */
 export function getBasePrice(
@@ -56,6 +58,55 @@ export async function createProductRequest(
   return data.createProduct;
 }
 
+// ── Update Product ──────────────────────────────────────────────────────────
+
+export async function updateProductRequest(
+  input: UpdateProductInput,
+): Promise<UpdateProductResult> {
+  const fields: string[] = [`id: ${JSON.stringify(input.id)}`];
+
+  if (input.title !== undefined)
+    fields.push(`title: ${JSON.stringify(input.title)}`);
+  if (input.description !== undefined)
+    fields.push(`description: ${JSON.stringify(input.description)}`);
+  if (input.category !== undefined)
+    fields.push(`category: ${JSON.stringify(input.category)}`);
+  if (input.marketPrice !== undefined)
+    fields.push(`marketPrice: ${input.marketPrice}`);
+  if (input.cancelCondition !== undefined)
+    fields.push(`cancelCondition: ${JSON.stringify(input.cancelCondition)}`);
+  if (input.prices !== undefined) {
+    const pricesGql = input.prices
+      .map((p) => `{ fromDays: ${p.fromDays}, price: ${p.price} }`)
+      .join("\n      ");
+    fields.push(`prices: [\n      ${pricesGql}\n    ]`);
+  }
+  if (input.images !== undefined) {
+    const imagesGql = input.images.map((u) => JSON.stringify(u)).join(", ");
+    fields.push(`images: [${imagesGql}]`);
+  }
+  if (input.locationIds !== undefined) {
+    const locationIdsGql = input.locationIds
+      .map((id) => JSON.stringify(id))
+      .join(", ");
+    fields.push(`locationIds: [${locationIdsGql}]`);
+  }
+
+  const data = await gql<{ updateProduct: UpdateProductResult }>(`
+    mutation {
+      updateProduct(input: {
+        ${fields.join("\n        ")}
+      }) {
+        id
+        title
+        description
+        updatedAt
+      }
+    }
+  `);
+  return data.updateProduct;
+}
+
 // ── Fetch Products ───────────────────────────────────────────────────────────
 
 export async function fetchProducts(
@@ -100,6 +151,7 @@ export async function fetchProduct(id: string): Promise<ProductDetail> {
           reviewCount
           images
           cancelCondition
+          marketPrice
           createdAt
           owner {
             id

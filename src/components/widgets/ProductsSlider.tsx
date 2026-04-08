@@ -15,12 +15,14 @@ interface ProductsSliderProps {
   products: ProductCardData[];
   title: string;
   viewAllText?: string;
+  ownerId?: string;
 }
 
 export function ProductsSlider({
   products,
   title,
   viewAllText = "Смотреть все",
+  ownerId,
 }: ProductsSliderProps) {
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -71,6 +73,7 @@ export function ProductsSlider({
               reviews={product.reviews}
               location={product.location}
               owner={product.owner}
+              ownerId={ownerId}
               popular={product.popular}
               image={product.image}
             />

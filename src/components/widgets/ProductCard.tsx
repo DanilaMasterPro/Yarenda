@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, MapPin } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Heart, MapPin, Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ImageWithFallback } from "../ui/ImageWithFallback";
 import { useFavorites } from "@/hooks";
+import { useAuth } from "@/hooks/useAuth";
 import { imageUrl } from "@/shared/api/products";
 import type { ProductOwner } from "@/shared/types/product.types";
 
@@ -17,6 +19,7 @@ export interface ProductCardProps {
   reviews?: number;
   location: string;
   owner: ProductOwner;
+  ownerId?: string;
   popular?: boolean;
   image: string;
 }
@@ -29,11 +32,15 @@ export function ProductCard({
   reviews,
   location,
   owner,
+  ownerId,
   popular = false,
   image,
 }: ProductCardProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { user } = useAuth();
+  const router = useRouter();
   const liked = isFavorite(String(id));
+  const isOwner = !!ownerId && !!user && user.id === ownerId;
 
   return (
     <Link
@@ -47,15 +54,29 @@ export function ProductCard({
           alt={title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
         />
-        <button
-          className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
-          onClick={(e) => {
-            e.preventDefault();
-            toggleFavorite(String(id));
-          }}
-        >
-          <Heart className={`w-5 h-5 ${liked ? "text-red-500 fill-red-500" : "text-gray-700"}`} />
-        </button>
+        {isOwner ? (
+          <button
+            className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              router.push(`/product/${id}/edit`);
+            }}
+          >
+            <Pencil className="w-5 h-5 text-gray-700" />
+          </button>
+        ) : (
+          <button
+            className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleFavorite(String(id));
+            }}
+          >
+            <Heart
+              className={`w-5 h-5 ${liked ? "text-red-500 fill-red-500" : "text-gray-700"}`}
+            />
+          </button>
+        )}
         {popular && (
           <span className="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-sm rounded-full">
             Популярное
@@ -82,7 +103,9 @@ export function ProductCard({
 
           {/* Owner Avatar */}
           <Avatar className="absolute top-1 right-0 w-10 h-10 border-2 border-gray-100">
-            {owner.avatar && <AvatarImage src={imageUrl(owner.avatar)} alt={owner.username} />}
+            {owner.avatar && (
+              <AvatarImage src={imageUrl(owner.avatar)} alt={owner.username} />
+            )}
             <AvatarFallback className="bg-yellow-500 text-dark-500 text-sm font-semibold">
               {owner.username.charAt(0)}
             </AvatarFallback>
@@ -100,7 +123,7 @@ export function ProductCard({
             <span className="text-gray-600 ml-1">/день</span>
           </div>
           <Button className="bg-yellow-500 hover:bg-yellow-600 text-dark-500">
-            Забронировать
+            Подробнее
           </Button>
         </div>
       </div>

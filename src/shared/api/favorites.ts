@@ -14,6 +14,7 @@ export interface FavoriteProduct {
   prices: { fromDays: number; price: number }[];
   location: { address: string }[];
   owner: FavoriteProductOwner;
+  ownerId: string;
 }
 
 export interface FavoriteEntry {
@@ -58,6 +59,7 @@ export async function getMyFavoritesRequest(): Promise<FavoriteEntry[]> {
           location {
             address
           }
+          ownerId
           owner {
             username
             avatar

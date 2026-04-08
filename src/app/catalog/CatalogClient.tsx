@@ -236,6 +236,7 @@ export function CatalogClient() {
                     price={getBasePrice(product.prices)}
                     location={product.location[0]?.address ?? ""}
                     owner={product.owner}
+                    ownerId={product.ownerId}
                     image={imageUrl(product.images[0] ?? "")}
                   />
                 ))}
@@ -268,10 +269,7 @@ export function CatalogClient() {
       {/* ── Map View ──────────────────────────────────────────────── */}
       {viewMode === "map" && (
         <div className="relative w-full h-[calc(100vh-80px)]">
-          <CatalogMapView
-            products={[]}
-            onSwitchToList={openList}
-          />
+          <CatalogMapView products={[]} onSwitchToList={openList} />
         </div>
       )}
 

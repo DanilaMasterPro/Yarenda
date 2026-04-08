@@ -24,6 +24,8 @@ export interface ImageUploadFile {
   file: File;
   /** Object URL — revoke when done */
   previewUrl: string;
+  /** Set for images already uploaded to the server; file will not be re-uploaded */
+  existingUrl?: string;
 }
 
 export interface ImageUploadProps {

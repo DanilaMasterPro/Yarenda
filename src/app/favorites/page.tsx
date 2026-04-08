@@ -25,7 +25,9 @@ export default function FavoritesPage() {
           {favorites.length > 0 && (
             <Button
               variant="outline"
-              onClick={() => favorites.forEach(({ product }) => toggleFavorite(product.id))}
+              onClick={() =>
+                favorites.forEach(({ product }) => toggleFavorite(product.id))
+              }
               className="text-red-500 hover:text-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
@@ -66,6 +68,7 @@ export default function FavoritesPage() {
                 reviews={product.reviewCount}
                 location={product.location[0]?.address ?? ""}
                 owner={product.owner}
+                ownerId={product.ownerId}
                 image={imageUrl(product.images[0] ?? "")}
               />
             ))}
