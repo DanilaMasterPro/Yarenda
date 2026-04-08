@@ -1,65 +1,82 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback } from "react";
+import { useAtom, useAtomValue, useSetAtom, atom } from "jotai";
+import { useAuth } from "./useAuth";
+import { authModalOpenAtom } from "@/shared/store/auth";
+import {
+  addToFavoritesRequest,
+  removeFromFavoritesRequest,
+  getMyFavoritesRequest,
+  type FavoriteEntry,
+} from "@/shared/api/favorites";
 
-const STORAGE_KEY = "favorites";
+export const favoritesAtom = atom<FavoriteEntry[]>([]);
+export const favoritesLoadingAtom = atom(false);
 
-let cachedRaw: string | null = null;
-let cachedResult: string[] = [];
-
-function getSnapshot(): string[] {
+// Called once by AuthProvider — not inside individual components
+export async function loadFavorites(
+  setFavorites: (v: FavoriteEntry[]) => void,
+  setLoading: (v: boolean) => void,
+) {
+  setLoading(true);
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw !== cachedRaw) {
-      cachedRaw = raw;
-      cachedResult = raw ? JSON.parse(raw).map(String) : [];
-    }
-    return cachedResult;
+    const list = await getMyFavoritesRequest();
+    setFavorites(list);
   } catch {
-    return cachedResult;
+    setFavorites([]);
+  } finally {
+    setLoading(false);
   }
-}
-
-const EMPTY: string[] = [];
-function getServerSnapshot(): string[] {
-  return EMPTY;
-}
-
-let listeners: Array<() => void> = [];
-
-function emitChange() {
-  for (const listener of listeners) {
-    listener();
-  }
-}
-
-function subscribe(listener: () => void) {
-  listeners.push(listener);
-  return () => {
-    listeners = listeners.filter((l) => l !== listener);
-  };
 }
 
 export function useFavorites() {
-  const favoriteIds = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot,
-  );
+  const { user } = useAuth();
+  const favorites = useAtomValue(favoritesAtom);
+  const loading = useAtomValue(favoritesLoadingAtom);
+  const setFavorites = useSetAtom(favoritesAtom);
+  const openAuthModal = useSetAtom(authModalOpenAtom);
+
+  const favoriteIds = favorites.map((f) => f.product.id);
 
   const isFavorite = useCallback(
     (id: string) => favoriteIds.includes(id),
     [favoriteIds],
   );
 
-  const toggleFavorite = useCallback((id: string) => {
-    const current = getSnapshot();
-    const next = current.includes(id)
-      ? current.filter((fid) => fid !== id)
-      : [...current, id];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    emitChange();
-  }, []);
+  const toggleFavorite = useCallback(
+    async (id: string) => {
+      if (!user) {
+        openAuthModal(true);
+        return;
+      }
+      const alreadyFav = favoriteIds.includes(id);
+      if (alreadyFav) {
+        setFavorites((prev) => prev.filter((f) => f.product.id !== id));
+        try {
+          await removeFromFavoritesRequest(id);
+        } catch {
+          getMyFavoritesRequest().then(setFavorites).catch(() => {});
+        }
+      } else {
+        // optimistic: add a placeholder so the heart flips immediately
+        setFavorites((prev) => [
+          ...prev,
+          { product: { id, title: "", rating: 0, reviewCount: 0, images: [], prices: [], location: [], owner: { username: "", avatar: null } } },
+        ]);
+        try {
+          await addToFavoritesRequest(id);
+          // refresh to get full product data
+          getMyFavoritesRequest().then(setFavorites).catch(() => {});
+        } catch {
+          // revert optimistic update
+          setFavorites((prev) => prev.filter((f) => f.product.id !== id));
+        }
+      }
+    },
+    [user, favoriteIds, openAuthModal, setFavorites],
+  );
 
-  return { favoriteIds, isFavorite, toggleFavorite };
+  return { favorites, favoriteIds, isFavorite, toggleFavorite, loading };
 }
+

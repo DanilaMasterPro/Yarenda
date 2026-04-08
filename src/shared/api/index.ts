@@ -29,3 +29,11 @@ export {
 export {
   fetchUser,
 } from "./users";
+export {
+  addToFavoritesRequest,
+  removeFromFavoritesRequest,
+  getMyFavoritesRequest,
+  type FavoriteEntry,
+  type FavoriteProduct,
+  type FavoriteProductOwner,
+} from "./favorites";

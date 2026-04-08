@@ -11,6 +11,7 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState } from "react";
+import { useAtom } from "jotai";
 import { AuthModal } from "../modals/AuthModal";
 import { LocationModal } from "../modals/LocationModal";
 import { MobileMenu } from "./MobileMenu";
@@ -18,9 +19,10 @@ import { SearchBar } from "./SearchBar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { authModalOpenAtom } from "@/shared/store/auth";
 
 export function Header() {
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useAtom(authModalOpenAtom);
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { user } = useAuth();

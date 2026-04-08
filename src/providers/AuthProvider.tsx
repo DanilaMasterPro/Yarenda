@@ -1,9 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { authAtom } from "@/shared/store/auth";
 import { getProfileRequest } from "@/shared/api/auth";
+import {
+  favoritesAtom,
+  favoritesLoadingAtom,
+  loadFavorites,
+} from "@/hooks/useFavorites";
 
 /**
  * Hydrates auth state on mount by reading stored tokens and fetching the
@@ -11,7 +16,9 @@ import { getProfileRequest } from "@/shared/api/auth";
  * transparently refresh tokens and retry before reaching this code.
  */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [, setAuth] = useAtom(authAtom);
+  const [auth, setAuth] = useAtom(authAtom);
+  const setFavorites = useSetAtom(favoritesAtom);
+  const setLoading = useSetAtom(favoritesLoadingAtom);
 
   // When tokens are force-cleared (e.g. refresh failed), reset the Jotai atom.
   useEffect(() => {
@@ -34,6 +41,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuth({ user: null, isLoading: false });
       });
   }, [setAuth]);
+
+  // Load / clear favorites whenever auth.user changes (single source of truth)
+  useEffect(() => {
+    if (!auth.user) {
+      setFavorites([]);
+      return;
+    }
+    loadFavorites(setFavorites, setLoading);
+  }, [auth.user?.id]);
 
   return <>{children}</>;
 }

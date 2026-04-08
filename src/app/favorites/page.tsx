@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Heart, Trash2, Loader2 } from "lucide-react";
+import { Heart, Loader2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useFavorites } from "@/hooks";
 import { Header } from "@/components/widgets/Header";
@@ -9,37 +8,10 @@ import { Footer } from "@/components/widgets/Footer";
 import { ProductCard } from "@/components/widgets/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import {
-  fetchProduct,
-  imageUrl,
-  getBasePrice,
-  type ProductDetail,
-} from "@/shared/api/products";
+import { imageUrl, getBasePrice } from "@/shared/api/products";
 
 export default function FavoritesPage() {
-  const { favoriteIds, toggleFavorite } = useFavorites();
-  const [products, setProducts] = useState<ProductDetail[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (favoriteIds.length === 0) {
-      setProducts([]);
-      return;
-    }
-
-    setLoading(true);
-    Promise.allSettled(favoriteIds.map((id) => fetchProduct(id)))
-      .then((results) => {
-        const loaded = results
-          .filter(
-            (r): r is PromiseFulfilledResult<ProductDetail> =>
-              r.status === "fulfilled",
-          )
-          .map((r) => r.value);
-        setProducts(loaded);
-      })
-      .finally(() => setLoading(false));
-  }, [favoriteIds]);
+  const { favorites, toggleFavorite, loading } = useFavorites();
 
   return (
     <div className="min-h-screen bg-white">
@@ -50,12 +22,10 @@ export default function FavoritesPage() {
 
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Избранное</h1>
-          {products.length > 0 && (
+          {favorites.length > 0 && (
             <Button
               variant="outline"
-              onClick={() => {
-                favoriteIds.forEach((id) => toggleFavorite(id));
-              }}
+              onClick={() => favorites.forEach(({ product }) => toggleFavorite(product.id))}
               className="text-red-500 hover:text-red-600"
             >
               <Trash2 className="w-4 h-4 mr-2" />
@@ -68,7 +38,7 @@ export default function FavoritesPage() {
           <div className="flex items-center justify-center py-24">
             <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
           </div>
-        ) : products.length === 0 ? (
+        ) : favorites.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 pt-12 text-center">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
               <Heart className="w-10 h-10 text-gray-400" />
@@ -86,7 +56,7 @@ export default function FavoritesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {favorites.map(({ product }) => (
               <ProductCard
                 key={product.id}
                 id={product.id}

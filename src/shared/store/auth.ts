@@ -8,3 +8,6 @@ export interface AuthState {
 
 // Start as loading so components wait for AuthProvider to finish its initial check
 export const authAtom = atom<AuthState>({ user: null, isLoading: true });
+
+// Controls the global auth modal visibility
+export const authModalOpenAtom = atom(false);
