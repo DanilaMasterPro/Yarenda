@@ -62,7 +62,7 @@ export function useFavorites() {
         // optimistic: add a placeholder so the heart flips immediately
         setFavorites((prev) => [
           ...prev,
-          { product: { id, title: "", rating: 0, reviewCount: 0, images: [], prices: [], location: [], owner: { username: "", avatar: null } } },
+          { product: { id, title: "", rating: 0, reviewCount: 0, images: [], prices: [], location: [], ownerId: "", owner: { username: "", avatar: null } } },
         ]);
         try {
           await addToFavoritesRequest(id);
