@@ -7,8 +7,16 @@ export {
   updateUserRequest,
   type AuthTokens,
   type AuthUser,
+  type UserRole,
   type UpdateUserInput,
 } from "./auth";
+export {
+  getUsersRequest,
+  setUserRoleRequest,
+  type AdminUser,
+  type GetUsersInput,
+  type SetUserRoleResult,
+} from "./admin";
 export { uploadFilesRequest } from "./uploads";
 export {
   createLocationRequest,

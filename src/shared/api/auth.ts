@@ -5,6 +5,8 @@ export interface AuthTokens {
   refreshToken: string;
 }
 
+export type UserRole = "user" | "admin";
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -13,6 +15,7 @@ export interface AuthUser {
   avatar: string | null;
   description: string | null;
   createdAt: string;
+  role: UserRole;
 }
 
 export async function loginRequest(
@@ -63,6 +66,7 @@ export async function getProfileRequest(): Promise<AuthUser> {
         avatar
         description
         createdAt
+        role
       }
     }
   `);
